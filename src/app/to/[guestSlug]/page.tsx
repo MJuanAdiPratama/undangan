@@ -135,3 +135,4 @@ export default async function GuestInvitationPage({ params, searchParams }: Page
     </main>
   );
 }
+

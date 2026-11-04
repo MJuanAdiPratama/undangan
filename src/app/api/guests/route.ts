@@ -85,7 +85,6 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const rawName = body.name;
     const phone_number = sanitizeText(body.phone_number || '');
-    const category = sanitizeText(body.category || 'Sahabat');
     const notes = sanitizeText(body.notes || '');
 
     if (!rawName || typeof rawName !== 'string' || !rawName.trim()) {
@@ -106,7 +105,6 @@ export async function POST(req: NextRequest) {
       slug,
       token,
       phone_number,
-      category,
       notes,
       view_count: 0,
       opened_at: null,
@@ -122,7 +120,6 @@ export async function POST(req: NextRequest) {
             slug,
             token,
             phone_number: phone_number || null,
-            category: category || null,
             notes: notes || null,
           },
         ])
@@ -170,3 +167,4 @@ export async function DELETE(req: NextRequest) {
     );
   }
 }
+

@@ -50,3 +50,4 @@ export function checkRateLimit(
     remaining: limit - validTimestamps.length,
   };
 }
+

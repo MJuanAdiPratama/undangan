@@ -1,15 +1,18 @@
 /**
- * Helper untuk membuat tautan Google Calendar dan download file .ics
+ * Helper untuk tautan Google Calendar dan Kalender Bawaan Ponsel (Mobile Calendar)
  */
 
 interface CalendarEventParams {
   title: string;
   description: string;
   location: string;
-  startDate: string; // ISO format
+  startDate: string; // ISO format (e.g. 2026-12-10T08:00:00+07:00)
   endDate: string; // ISO format
 }
 
+/**
+ * Buat tautan langsung ke Google Calendar
+ */
 export function createGoogleCalendarUrl({
   title,
   description,
@@ -17,7 +20,6 @@ export function createGoogleCalendarUrl({
   startDate,
   endDate,
 }: CalendarEventParams): string {
-  // Format to UTC string YYYYMMDDTHHMMSSZ
   const formatUtc = (dateStr: string) => {
     const d = new Date(dateStr);
     return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
@@ -36,7 +38,10 @@ export function createGoogleCalendarUrl({
   return url.toString();
 }
 
-export function downloadIcsFile({
+/**
+ * Buka acara langsung di Kalender Bawaan HP (Apple Calendar / Android Native Calendar)
+ */
+export function openDeviceCalendar({
   title,
   description,
   location,
@@ -48,28 +53,32 @@ export function downloadIcsFile({
     return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
   };
 
-  const icsContent = [
+  const startUtc = formatUtc(startDate);
+  const endUtc = formatUtc(endDate);
+
+  // Buat data kalender standar iCalendar RFC 5545
+  const icsData = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//skywannn wedding//Wedding Invitation//ID',
-    'CALSCALE:GREGORIAN',
+    'PRODID:-//skywannn wedding//Wedding Calendar//ID',
     'BEGIN:VEVENT',
     `SUMMARY:${title}`,
-    `DESCRIPTION:${description.replace(/\n/g, '\\n')}`,
+    `DESCRIPTION:${description.replace(/\n/g, ' ')}`,
     `LOCATION:${location}`,
-    `DTSTART:${formatUtc(startDate)}`,
-    `DTEND:${formatUtc(endDate)}`,
+    `DTSTART:${startUtc}`,
+    `DTEND:${endUtc}`,
     'STATUS:CONFIRMED',
     'END:VEVENT',
     'END:VCALENDAR',
   ].join('\r\n');
 
-  const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-  const url = window.URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.setAttribute('download', 'wedding-event.ics');
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
+  const blobUrl = window.URL.createObjectURL(blob);
+  const tempLink = document.createElement('a');
+  tempLink.href = blobUrl;
+  tempLink.setAttribute('download', 'wedding-reminder.ics');
+  document.body.appendChild(tempLink);
+  tempLink.click();
+  document.body.removeChild(tempLink);
+  window.URL.revokeObjectURL(blobUrl);
 }

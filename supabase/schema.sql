@@ -229,3 +229,4 @@ VALUES
     ('Budi Santoso', 'Sahabat Pengantin', 'Barakallahu lakuma wa baraka alaikuma wa jama''a bainakuma fii khoir. Selamat menempuh hidup baru Juan & Una!', true),
     ('Siti Nurhaliza', 'Keluarga', 'Selamat untuk Juan dan Una, semoga senantiasa diberikan kebahagiaan, keberkahan, dan cinta hingga akhir hayat.', true),
     ('Rizky Ramadhan', 'Rekan Kerja', 'Happy Wedding Juan & Una! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah. Aamiin.', true);
+

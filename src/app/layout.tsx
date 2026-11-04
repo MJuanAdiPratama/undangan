@@ -29,6 +29,11 @@ export const metadata: Metadata = {
   title: 'The Wedding of Juan & Una | skywannn wedding',
   description:
     'Undangan Pernikahan Digital Handcrafted Fine-Art Juan & Una. Diselenggarakan pada Minggu, 10 Desember 2026 di Bandung, Jawa Barat.',
+  icons: {
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
   openGraph: {
     title: 'The Wedding of Juan & Una',
     description: 'Undangan Pernikahan Digital Juan & Una',

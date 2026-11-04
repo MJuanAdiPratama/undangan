@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import CoverOverlay from '@/components/cover/CoverOverlay';
 import AudioPlayer from '@/components/audio/AudioPlayer';
 import HeroSection from '@/components/hero/HeroSection';
@@ -13,14 +14,19 @@ import GiftSection from '@/components/gift/GiftSection';
 import FooterWatermark from '@/components/footer/FooterWatermark';
 import { defaultWeddingEvent } from '@/lib/supabase';
 
-export default function HomePage() {
+function InvitationContent() {
+  const searchParams = useSearchParams();
+  // Ambil parameter nama tamu dari query URL ?to= atau ?u=
+  const guestQuery = searchParams.get('to') || searchParams.get('u') || '';
+  const guestName = guestQuery ? guestQuery.trim() : 'Tamu Undangan';
+
   const event = defaultWeddingEvent;
 
   return (
     <main className="relative min-h-screen bg-earth-beige">
       {/* 1. Landing Cover Overlay & Audio Trigger */}
       <CoverOverlay
-        guestName="Tamu Undangan Terhormat"
+        guestName={guestName}
         groomNickname={event.groom_nickname}
         brideNickname={event.bride_nickname}
         weddingDate="Minggu, 10 Desember 2026"
@@ -50,16 +56,24 @@ export default function HomePage() {
       <GallerySection />
 
       {/* 8. Form RSVP & Wall Ucapan Real-time */}
-      <RsvpSection initialGuestName="" />
+      <RsvpSection initialGuestName={guestQuery ? guestQuery.trim() : ''} />
 
       {/* 9. Amplop Digital & Kado */}
       <GiftSection event={event} />
 
-      {/* 10. Footer Watermark Wajib: by skywannn wedding */}
+      {/* 10. Footer Watermark: by skywannn wedding */}
       <FooterWatermark
         groomNickname={event.groom_nickname}
         brideNickname={event.bride_nickname}
       />
     </main>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-earth-beige" />}>
+      <InvitationContent />
+    </Suspense>
   );
 }

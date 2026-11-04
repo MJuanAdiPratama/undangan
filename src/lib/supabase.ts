@@ -101,7 +101,6 @@ export const defaultGuests: Guest[] = [
     slug: 'budi-santoso',
     token: 'a8f9b2c3',
     phone_number: '081234567890',
-    category: 'Sahabat',
     notes: 'Meja VIP 1',
     view_count: 3,
     opened_at: new Date().toISOString(),
@@ -113,7 +112,6 @@ export const defaultGuests: Guest[] = [
     slug: 'siti-nurhaliza',
     token: 'd4e5f6a1',
     phone_number: '081298765432',
-    category: 'Keluarga',
     notes: 'Keluarga Jakarta',
     view_count: 1,
     opened_at: new Date().toISOString(),
@@ -125,8 +123,7 @@ export const defaultGuests: Guest[] = [
     slug: 'rizky-ramadhan',
     token: 'b7c8d9e0',
     phone_number: '081377889900',
-    category: 'Rekan Kerja',
-    notes: 'Tim IT Antigravity',
+    notes: 'Teman Kuliah',
     view_count: 2,
     opened_at: new Date().toISOString(),
     created_at: new Date().toISOString(),
@@ -189,3 +186,4 @@ export const defaultRsvps: Rsvp[] = [
     created_at: new Date(Date.now() - 3600000).toISOString(),
   },
 ];
+

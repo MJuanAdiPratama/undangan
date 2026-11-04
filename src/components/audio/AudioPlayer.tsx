@@ -63,3 +63,4 @@ export default function AudioPlayer({ title = 'Tulus - Perahu Kertas' }: AudioPl
     </aside>
   );
 }
+

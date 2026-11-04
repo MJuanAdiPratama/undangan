@@ -43,3 +43,4 @@ export function generateRandomToken(length = 8): string {
   }
   return token;
 }
+

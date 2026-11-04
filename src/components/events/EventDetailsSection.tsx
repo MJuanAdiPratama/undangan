@@ -4,7 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, MapPin, ExternalLink, CalendarPlus } from 'lucide-react';
 import { WeddingEvent } from '@/types';
-import { createGoogleCalendarUrl, downloadIcsFile } from '@/lib/calendar';
+import { createGoogleCalendarUrl, openDeviceCalendar } from '@/lib/calendar';
 
 interface EventDetailsSectionProps {
   event: WeddingEvent;
@@ -22,8 +22,8 @@ export default function EventDetailsSection({ event }: EventDetailsSectionProps)
     window.open(calendarUrl, '_blank', 'noopener,noreferrer');
   };
 
-  const handleDownloadIcs = () => {
-    downloadIcsFile({
+  const handleOpenMobileCalendar = () => {
+    openDeviceCalendar({
       title: `Pernikahan ${event.groom_nickname} & ${event.bride_nickname}`,
       description: `Undangan Pernikahan ${event.groom_name} & ${event.bride_name}. Bertempat di ${event.akad_venue}.`,
       location: event.akad_address,
@@ -143,10 +143,11 @@ export default function EventDetailsSection({ event }: EventDetailsSectionProps)
             <span>Simpan ke Google Calendar</span>
           </button>
           <button
-            onClick={handleDownloadIcs}
+            onClick={handleOpenMobileCalendar}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-earth-beige border border-earth-charcoal/20 text-earth-charcoal hover:bg-earth-beige-soft text-xs font-medium tracking-wide transition-colors"
           >
-            <span>Unduh Pengingat (.ics)</span>
+            <Calendar className="w-4 h-4 text-earth-gold" />
+            <span>Kalender Bawaan Ponsel</span>
           </button>
         </div>
 
@@ -192,3 +193,4 @@ export default function EventDetailsSection({ event }: EventDetailsSectionProps)
     </section>
   );
 }
+

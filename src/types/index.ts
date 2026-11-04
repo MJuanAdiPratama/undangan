@@ -53,7 +53,6 @@ export interface Guest {
   slug: string;
   token: string;
   phone_number?: string;
-  category?: string;
   notes?: string;
   view_count: number;
   opened_at?: string | null;
@@ -95,3 +94,4 @@ export interface GalleryPhoto {
   caption: string;
   aspectRatio?: 'square' | 'portrait' | 'landscape' | 'wide';
 }
+
