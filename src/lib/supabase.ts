@@ -134,7 +134,6 @@ export const defaultWishes: Wish[] = [
   {
     id: 'w-1',
     name: 'Budi Santoso',
-    relationship: 'Sahabat Pengantin',
     message:
       'Barakallahu lakuma wa baraka alaikuma wa jama\'a bainakuma fii khoir. Selamat menempuh hidup baru Juan & Una, bahagia selalu sampai surga-Nya!',
     is_visible: true,
@@ -143,7 +142,6 @@ export const defaultWishes: Wish[] = [
   {
     id: 'w-2',
     name: 'Siti Nurhaliza',
-    relationship: 'Keluarga',
     message:
       'Selamat untuk Juan dan Una, semoga senantiasa diberikan keberkahan, sakinah mawaddah warahmah, serta dikaruniai keturunan yang sholeh dan sholehah.',
     is_visible: true,
@@ -152,7 +150,6 @@ export const defaultWishes: Wish[] = [
   {
     id: 'w-3',
     name: 'Rizky Ramadhan',
-    relationship: 'Rekan Kerja',
     message:
       'Happy Wedding Juan & Una! Semoga langgeng dan saling melengkapi dalam mengarungi bahtera rumah tangga. Aamiin.',
     is_visible: true,

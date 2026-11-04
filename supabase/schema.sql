@@ -80,7 +80,6 @@ CREATE TABLE IF NOT EXISTS public.guests (
     slug TEXT NOT NULL UNIQUE,
     token TEXT NOT NULL,
     phone_number TEXT,
-    category TEXT DEFAULT 'Sahabat',
     notes TEXT,
     view_count INT DEFAULT 0,
     opened_at TIMESTAMPTZ,
@@ -216,17 +215,17 @@ VALUES (
 ) ON CONFLICT (slug) DO NOTHING;
 
 -- Contoh data tamu awal untuk testing
-INSERT INTO public.guests (name, slug, token, phone_number, category)
+INSERT INTO public.guests (name, slug, token, phone_number)
 VALUES 
-    ('Budi Santoso & Partner', 'budi-santoso', 'a8f9b2c3', '081234567890', 'Sahabat'),
-    ('Siti Nurhaliza', 'siti-nurhaliza', 'd4e5f6a1', '081298765432', 'Keluarga'),
-    ('Rizky Ramadhan', 'rizky-ramadhan', 'b7c8d9e0', '081377889900', 'Rekan Kerja')
+    ('Budi Santoso & Partner', 'budi-santoso', 'a8f9b2c3', '081234567890'),
+    ('Siti Nurhaliza', 'siti-nurhaliza', 'd4e5f6a1', '081298765432'),
+    ('Rizky Ramadhan', 'rizky-ramadhan', 'b7c8d9e0', '081377889900')
 ON CONFLICT (slug) DO NOTHING;
 
 -- Contoh ucapan awal yang elegan
-INSERT INTO public.wishes (name, relationship, message, is_visible)
+INSERT INTO public.wishes (name, message, is_visible)
 VALUES 
-    ('Budi Santoso', 'Sahabat Pengantin', 'Barakallahu lakuma wa baraka alaikuma wa jama''a bainakuma fii khoir. Selamat menempuh hidup baru Juan & Una!', true),
-    ('Siti Nurhaliza', 'Keluarga', 'Selamat untuk Juan dan Una, semoga senantiasa diberikan kebahagiaan, keberkahan, dan cinta hingga akhir hayat.', true),
-    ('Rizky Ramadhan', 'Rekan Kerja', 'Happy Wedding Juan & Una! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah. Aamiin.', true);
+    ('Budi Santoso', 'Barakallahu lakuma wa baraka alaikuma wa jama''a bainakuma fii khoir. Selamat menempuh hidup baru Juan & Una!', true),
+    ('Siti Nurhaliza', 'Selamat untuk Juan dan Una, semoga senantiasa diberikan kebahagiaan, keberkahan, dan cinta hingga akhir hayat.', true),
+    ('Rizky Ramadhan', 'Happy Wedding Juan & Una! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah. Aamiin.', true);
 

@@ -323,11 +323,6 @@ export default function RsvpSection({
                           {w.name}
                         </span>
                       </div>
-                      {w.relationship && (
-                        <span className="text-[10px] text-earth-sage-dark font-medium px-2 py-0.5 rounded-full bg-earth-beige">
-                          {w.relationship}
-                        </span>
-                      )}
                     </div>
                     <p className="text-xs text-earth-charcoal/80 leading-relaxed pl-9">
                       {w.message}
