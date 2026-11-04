@@ -1,5 +1,5 @@
 /**
- * Helper untuk tautan Google Calendar dan Kalender Bawaan Ponsel (Mobile Calendar)
+ * Helper untuk membuat tautan langsung ke Google Calendar (tanpa unduhan file)
  */
 
 interface CalendarEventParams {
@@ -36,49 +36,4 @@ export function createGoogleCalendarUrl({
   url.searchParams.set('location', location);
 
   return url.toString();
-}
-
-/**
- * Buka acara langsung di Kalender Bawaan HP (Apple Calendar / Android Native Calendar)
- */
-export function openDeviceCalendar({
-  title,
-  description,
-  location,
-  startDate,
-  endDate,
-}: CalendarEventParams) {
-  const formatUtc = (dateStr: string) => {
-    const d = new Date(dateStr);
-    return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
-  };
-
-  const startUtc = formatUtc(startDate);
-  const endUtc = formatUtc(endDate);
-
-  // Buat data kalender standar iCalendar RFC 5545
-  const icsData = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//skywannn wedding//Wedding Calendar//ID',
-    'BEGIN:VEVENT',
-    `SUMMARY:${title}`,
-    `DESCRIPTION:${description.replace(/\n/g, ' ')}`,
-    `LOCATION:${location}`,
-    `DTSTART:${startUtc}`,
-    `DTEND:${endUtc}`,
-    'STATUS:CONFIRMED',
-    'END:VEVENT',
-    'END:VCALENDAR',
-  ].join('\r\n');
-
-  const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
-  const blobUrl = window.URL.createObjectURL(blob);
-  const tempLink = document.createElement('a');
-  tempLink.href = blobUrl;
-  tempLink.setAttribute('download', 'wedding-reminder.ics');
-  document.body.appendChild(tempLink);
-  tempLink.click();
-  document.body.removeChild(tempLink);
-  window.URL.revokeObjectURL(blobUrl);
 }

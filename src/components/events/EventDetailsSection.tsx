@@ -4,7 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, MapPin, ExternalLink, CalendarPlus } from 'lucide-react';
 import { WeddingEvent } from '@/types';
-import { createGoogleCalendarUrl, openDeviceCalendar } from '@/lib/calendar';
+import { createGoogleCalendarUrl } from '@/lib/calendar';
 
 interface EventDetailsSectionProps {
   event: WeddingEvent;
@@ -20,16 +20,6 @@ export default function EventDetailsSection({ event }: EventDetailsSectionProps)
       endDate: '2026-12-10T14:00:00+07:00',
     });
     window.open(calendarUrl, '_blank', 'noopener,noreferrer');
-  };
-
-  const handleOpenMobileCalendar = () => {
-    openDeviceCalendar({
-      title: `Pernikahan ${event.groom_nickname} & ${event.bride_nickname}`,
-      description: `Undangan Pernikahan ${event.groom_name} & ${event.bride_name}. Bertempat di ${event.akad_venue}.`,
-      location: event.akad_address,
-      startDate: event.event_date || '2026-12-10T08:00:00+07:00',
-      endDate: '2026-12-10T14:00:00+07:00',
-    });
   };
 
   return (
@@ -133,21 +123,14 @@ export default function EventDetailsSection({ event }: EventDetailsSectionProps)
           </motion.div>
         </div>
 
-        {/* Action Buttons: Add to Calendar */}
-        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+        {/* Action Button: Add to Google Calendar */}
+        <div className="flex items-center justify-center pt-2">
           <button
             onClick={handleAddToCalendar}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-earth-charcoal text-earth-beige hover:bg-earth-sage text-xs font-medium tracking-wide shadow-soft transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-earth-charcoal text-earth-beige hover:bg-earth-sage text-xs font-medium tracking-wide shadow-soft transition-colors"
           >
             <CalendarPlus className="w-4 h-4 text-earth-gold" />
             <span>Simpan ke Google Calendar</span>
-          </button>
-          <button
-            onClick={handleOpenMobileCalendar}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-earth-beige border border-earth-charcoal/20 text-earth-charcoal hover:bg-earth-beige-soft text-xs font-medium tracking-wide transition-colors"
-          >
-            <Calendar className="w-4 h-4 text-earth-gold" />
-            <span>Kalender Bawaan Ponsel</span>
           </button>
         </div>
 

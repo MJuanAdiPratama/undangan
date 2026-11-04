@@ -45,15 +45,12 @@ export default function AdminDashboardPage() {
   });
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Form Tambah Tamu Khusus State
+  // Form Tambah Tamu State (Hanya Nama dan No WhatsApp, Tanpa Kategori)
   const [newName, setNewName] = useState('');
   const [newPhone, setNewPhone] = useState('');
-  const [newNotes, setNewNotes] = useState('');
   const [isAddingGuest, setIsAddingGuest] = useState(false);
 
   // Copy Feedback State
-  const [copiedGeneralLink, setCopiedGeneralLink] = useState(false);
-  const [copiedGeneralWa, setCopiedGeneralWa] = useState(false);
   const [copiedLink, setCopiedLink] = useState<string | null>(null);
   const [copiedWaText, setCopiedWaText] = useState<string | null>(null);
 
@@ -73,7 +70,7 @@ export default function AdminDashboardPage() {
 
   const fetchData = async () => {
     try {
-      // Ambil tamu & analytics
+      // Ambil data tamu & analytics
       const resGuests = await fetch('/api/guests');
       const dataGuests = await resGuests.json();
       if (dataGuests.success) {
@@ -83,7 +80,7 @@ export default function AdminDashboardPage() {
         }
       }
 
-      // Ambil semua ucapan untuk moderasi
+      // Ambil ucapan untuk moderasi
       const resWishes = await fetch('/api/wishes?all=true');
       const dataWishes = await resWishes.json();
       if (dataWishes.success) {
@@ -106,7 +103,6 @@ export default function AdminDashboardPage() {
         body: JSON.stringify({
           name: newName,
           phone_number: newPhone,
-          notes: newNotes,
         }),
       });
 
@@ -116,7 +112,6 @@ export default function AdminDashboardPage() {
         setAnalytics((prev) => ({ ...prev, totalGuests: prev.totalGuests + 1 }));
         setNewName('');
         setNewPhone('');
-        setNewNotes('');
       }
     } catch (err) {
       console.error('Add guest error:', err);
@@ -173,59 +168,31 @@ export default function AdminDashboardPage() {
     }
   };
 
-  // 1. Teks Broadcast Umum (Satu Link untuk Semua Tamu Ribuan)
-  const generalBroadcastText = `Assalamu’alaikum Warahmatullahi Wabarakatuh,
-Kepada Yth. Bapak/Ibu/Saudara/i,
-
-Tanpa mengurangi rasa hormat, kami bermaksud mengundang Bapak/Ibu/Saudara/i untuk menghadiri syukuran pernikahan kami:
-
-*${defaultWeddingEvent.groom_nickname} & ${defaultWeddingEvent.bride_nickname}*
-📅 Minggu, 10 Desember 2026
-📍 Puri Suryalaya Wedding House, Bandung
-
-Informasi lengkap mengenai waktu, lokasi, dan konfirmasi kehadiran (RSVP) dapat diakses melalui link undangan berikut:
-${baseUrl}/
-
-Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.
-
-Terima kasih.
-Wassalamu’alaikum Warahmatullahi Wabarakatuh.
-*${defaultWeddingEvent.groom_nickname} & ${defaultWeddingEvent.bride_nickname}*
-(by skywannn wedding)`;
-
-  const copyGeneralLink = () => {
-    navigator.clipboard.writeText(`${baseUrl}/`);
-    setCopiedGeneralLink(true);
-    setTimeout(() => setCopiedGeneralLink(false), 3000);
-  };
-
-  const copyGeneralWa = () => {
-    navigator.clipboard.writeText(generalBroadcastText);
-    setCopiedGeneralWa(true);
-    setTimeout(() => setCopiedGeneralWa(false), 3000);
-  };
-
-  // 2. Teks Broadcast Personal per Tamu
+  // URL Unik Per Tamu
   const generateGuestUrl = (guest: Guest) => {
     return `${baseUrl}/to/${guest.slug}?token=${guest.token}`;
   };
 
+  // Pesan WhatsApp Personal per Tamu
   const generateWaText = (guest: Guest) => {
     const url = generateGuestUrl(guest);
     return `Assalamu’alaikum Warahmatullahi Wabarakatuh,
 Kepada Yth. Bapak/Ibu/Saudara/i *${guest.name}*,
 
-Tanpa mengurangi rasa hormat, kami mengundang Anda untuk hadir di hari bahagia pernikahan kami:
+Tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri syukuran pernikahan kami:
 
 *${defaultWeddingEvent.groom_nickname} & ${defaultWeddingEvent.bride_nickname}*
 📅 Minggu, 10 Desember 2026
 📍 Puri Suryalaya Wedding House, Bandung
 
-Buka undangan personal Anda melalui link berikut:
+Informasi lengkap mengenai jadwal acara, lokasi, dan konfirmasi kehadiran (RSVP) dapat diakses melalui link undangan personal berikut:
 ${url}
 
-Doa restu Anda merupakan karunia terindah bagi kami.
+Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.
+
 Terima kasih.
+Wassalamu’alaikum Warahmatullahi Wabarakatuh.
+Salam hangat,
 *${defaultWeddingEvent.groom_nickname} & ${defaultWeddingEvent.bride_nickname}*
 (by skywannn wedding)`;
   };
@@ -257,12 +224,11 @@ Terima kasih.
   };
 
   const exportCsv = () => {
-    const headers = ['Nama', 'No WhatsApp', 'Link Undangan', 'Catatan'];
+    const headers = ['Nama Tamu', 'No WhatsApp', 'Link Undangan'];
     const rows = guests.map((g) => [
       `"${g.name.replace(/"/g, '""')}"`,
       `"${g.phone_number || ''}"`,
       `"${generateGuestUrl(g)}"`,
-      `"${(g.notes || '').replace(/"/g, '""')}"`,
     ]);
 
     const csvContent =
@@ -282,7 +248,7 @@ Terima kasih.
     g.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Jika belum login passkey
+  // Jika belum login PIN
   if (!isAuthenticated) {
     return (
       <main className="min-h-screen flex items-center justify-center bg-earth-beige px-4">
@@ -363,7 +329,7 @@ Terima kasih.
             }`}
           >
             <Users className="w-4 h-4 text-earth-gold" />
-            <span>Penyebaran Link &amp; Tamu</span>
+            <span>Manajemen Tamu ({guests.length})</span>
           </button>
 
           <button
@@ -391,90 +357,19 @@ Terima kasih.
           </button>
         </div>
 
-        {/* TAB 1: PENYEBARAN LINK & MANAJEMEN TAMU */}
+        {/* TAB 1: GUEST LINK GENERATOR (SATU PER SATU PER TAMU) */}
         {activeTab === 'guests' && (
           <div className="space-y-8">
-            {/* CARD 1: LINK UTAMA MASSAL (1 LINK UNTUK SEMUA TAMU RIBUAN) */}
-            <div className="bg-earth-beige-soft rounded-3xl p-6 sm:p-8 border-2 border-earth-gold/40 shadow-card space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div className="space-y-1">
-                  <span className="text-[11px] uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-earth-gold/20 text-earth-charcoal font-bold">
-                    Paling Praktis &bull; Rekomendasi
-                  </span>
-                  <h2 className="font-serif text-xl sm:text-2xl font-bold text-earth-charcoal">
-                    Satu Link Utama untuk Semua Tamu (Broadcast Massal)
-                  </h2>
-                  <p className="text-xs text-earth-sage-dark max-w-xl leading-relaxed">
-                    Anda tidak perlu membuat link satu per satu untuk ribuan tamu! Cukup sebar link utama ini ke grup keluarga, teman kantor, atau media sosial. Tamu akan mengisi nama mereka sendiri di form RSVP dan otomatis tercatat di dashboard.
-                  </p>
-                </div>
-              </div>
-
-              {/* Box Link Utama */}
-              <div className="p-4 rounded-2xl bg-earth-beige border border-earth-gold/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <p className="font-mono text-sm text-earth-charcoal font-semibold truncate">
-                  {baseUrl}/
-                </p>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={copyGeneralLink}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-earth-charcoal text-earth-beige hover:bg-earth-sage text-xs font-medium transition-colors shadow-soft"
-                  >
-                    {copiedGeneralLink ? (
-                      <>
-                        <Check className="w-4 h-4 text-earth-gold" />
-                        <span>Link Utama Tersalin!</span>
-                      </>
-                    ) : (
-                      <>
-                        <LinkIcon className="w-4 h-4 text-earth-gold" />
-                        <span>Salin Link Utama</span>
-                      </>
-                    )}
-                  </button>
-
-                  <button
-                    onClick={copyGeneralWa}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-green-700 text-white hover:bg-green-800 text-xs font-medium transition-colors shadow-soft"
-                  >
-                    {copiedGeneralWa ? (
-                      <>
-                        <Check className="w-4 h-4" />
-                        <span>Teks WA Tersalin!</span>
-                      </>
-                    ) : (
-                      <>
-                        <Share2 className="w-4 h-4" />
-                        <span>Salin Teks WhatsApp</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              {/* Tips Trik URL Instan Tanpa Database */}
-              <div className="p-3.5 rounded-xl bg-earth-beige/60 border border-earth-gold/20 text-[11px] text-earth-charcoal/80 space-y-1">
-                <p className="font-bold text-earth-charcoal">
-                  💡 Tips Cepat: Mengirim Undangan dengan Nama Tamu Tertentu
-                </p>
-                <p>
-                  Jika ingin nama tamu muncul di cover tanpa menyimpannya ke database terlebih dahulu, Anda cukup menambahkan <code className="bg-earth-beige px-1.5 py-0.5 rounded text-earth-charcoal font-bold">?to=Nama+Tamu</code> di ujung link!
-                  <br />
-                  Contoh: <code className="bg-earth-beige px-1.5 py-0.5 rounded text-earth-charcoal font-mono font-semibold">{baseUrl}/?to=Bapak+Joko+Santoso</code>
-                </p>
-              </div>
-            </div>
-
-            {/* CARD 2: BUAT UNDANGAN KHUSUS TERTENTU (OPSIONAL) */}
-            <div className="bg-earth-beige-soft rounded-3xl p-6 border border-earth-gold/30 shadow-card space-y-4">
+            {/* Form Buat Link Tamu Baru */}
+            <div className="bg-earth-beige-soft rounded-3xl p-6 sm:p-8 border border-earth-gold/30 shadow-card space-y-4">
               <div className="flex items-center gap-2">
                 <UserPlus className="w-5 h-5 text-earth-gold" />
                 <h3 className="font-serif text-lg font-bold text-earth-charcoal">
-                  Buat Link Personal Khusus (Opsional)
+                  Buat Link Undangan Tamu Baru
                 </h3>
               </div>
               <p className="text-xs text-earth-sage-dark">
-                Gunakan ini hanya jika Anda ingin mencatat tamu VIP atau kerabat terdekat tertentu secara khusus.
+                Masukkan nama tamu untuk membuat link personal unik. Nama ini akan otomatis tampil di cover pembuka undangan.
               </p>
 
               <form onSubmit={handleAddGuest} className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
@@ -518,107 +413,109 @@ Terima kasih.
               </form>
             </div>
 
-            {/* DAFTAR TAMU KHUSUS & SEARCH */}
-            <div className="space-y-4">
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-                <div className="relative flex-1 max-w-md">
-                  <Search className="w-4 h-4 text-earth-charcoal/50 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Cari nama tamu khusus..."
-                    className="w-full pl-10 pr-4 py-2 rounded-xl border border-earth-gold/30 bg-earth-beige text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-earth-gold/50"
-                  />
+            {/* Toolbar: Search & Ekspor CSV */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+              <div className="relative flex-1 max-w-md">
+                <Search className="w-4 h-4 text-earth-charcoal/50 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Cari nama tamu..."
+                  className="w-full pl-10 pr-4 py-2 rounded-xl border border-earth-gold/30 bg-earth-beige text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-earth-gold/50"
+                />
+              </div>
+
+              <button
+                onClick={exportCsv}
+                className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-earth-beige-soft border border-earth-charcoal/20 hover:bg-earth-beige text-xs font-medium text-earth-charcoal transition-colors"
+              >
+                <Download className="w-4 h-4 text-earth-gold" />
+                <span>Ekspor CSV</span>
+              </button>
+            </div>
+
+            {/* Daftar Tamu Undangan */}
+            <div className="space-y-3">
+              {filteredGuests.length === 0 ? (
+                <div className="text-center py-12 bg-earth-beige-soft rounded-2xl border border-earth-gold/20">
+                  <p className="text-xs text-earth-charcoal/60 italic">
+                    Belum ada tamu yang terdaftar. Tambahkan tamu melalui formulir di atas.
+                  </p>
                 </div>
-
-                <button
-                  onClick={exportCsv}
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-earth-beige-soft border border-earth-charcoal/20 hover:bg-earth-beige text-xs font-medium text-earth-charcoal transition-colors"
-                >
-                  <Download className="w-4 h-4 text-earth-gold" />
-                  <span>Ekspor CSV</span>
-                </button>
-              </div>
-
-              {/* List Tamu Khusus */}
-              <div className="space-y-3">
-                {filteredGuests.length === 0 ? (
-                  <div className="text-center py-10 bg-earth-beige-soft rounded-2xl border border-earth-gold/20">
-                    <p className="text-xs text-earth-charcoal/60 italic">
-                      Tidak ada daftar tamu khusus. Tamu umum yang mengisi RSVP akan muncul di tab Analitik.
-                    </p>
-                  </div>
-                ) : (
-                  filteredGuests.map((guest) => (
-                    <div
-                      key={guest.id}
-                      className="bg-earth-beige-soft rounded-2xl p-4 sm:p-5 border border-earth-gold/25 shadow-soft flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-                    >
-                      <div className="space-y-1">
-                        <span className="font-serif font-bold text-earth-charcoal text-base">
-                          {guest.name}
-                        </span>
-                        <p className="text-xs text-earth-sage-dark font-mono truncate max-w-md">
-                          {generateGuestUrl(guest)}
-                        </p>
-                      </div>
-
-                      {/* Action Buttons */}
-                      <div className="flex flex-wrap items-center gap-2">
-                        <button
-                          onClick={() => copyGuestLink(guest)}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-earth-beige border border-earth-gold/30 hover:bg-earth-beige-dark text-xs font-medium text-earth-charcoal transition-colors"
-                        >
-                          {copiedLink === guest.id ? (
-                            <>
-                              <Check className="w-3.5 h-3.5 text-earth-gold" />
-                              <span className="text-earth-sage-dark font-bold">Tersalin!</span>
-                            </>
-                          ) : (
-                            <>
-                              <LinkIcon className="w-3.5 h-3.5 text-earth-gold" />
-                              <span>Salin Link</span>
-                            </>
-                          )}
-                        </button>
-
-                        <button
-                          onClick={() => copyWaText(guest)}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-earth-beige border border-earth-gold/30 hover:bg-earth-beige-dark text-xs font-medium text-earth-charcoal transition-colors"
-                        >
-                          {copiedWaText === guest.id ? (
-                            <>
-                              <Check className="w-3.5 h-3.5 text-earth-gold" />
-                              <span className="text-earth-sage-dark font-bold">Tersalin!</span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy className="w-3.5 h-3.5 text-earth-gold" />
-                              <span>Salin Teks WA</span>
-                            </>
-                          )}
-                        </button>
-
-                        <button
-                          onClick={() => sendWhatsApp(guest)}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-green-700 text-white hover:bg-green-800 text-xs font-medium transition-colors"
-                        >
-                          <Send className="w-3.5 h-3.5" />
-                          <span>Kirim WA</span>
-                        </button>
-
-                        <button
-                          onClick={() => handleDeleteGuest(guest.id)}
-                          className="p-1.5 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
+              ) : (
+                filteredGuests.map((guest) => (
+                  <div
+                    key={guest.id}
+                    className="bg-earth-beige-soft rounded-2xl p-4 sm:p-5 border border-earth-gold/25 shadow-soft flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                  >
+                    <div className="space-y-1">
+                      <span className="font-serif font-bold text-earth-charcoal text-base">
+                        {guest.name}
+                      </span>
+                      <p className="text-xs text-earth-sage-dark font-mono truncate max-w-md">
+                        {generateGuestUrl(guest)}
+                      </p>
                     </div>
-                  ))
-                )}
-              </div>
+
+                    {/* Action Buttons: Salin Link, Salin Teks WA, Kirim WA, Hapus */}
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        onClick={() => copyGuestLink(guest)}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-earth-beige border border-earth-gold/30 hover:bg-earth-beige-dark text-xs font-medium text-earth-charcoal transition-colors"
+                        title="Salin Link Undangan"
+                      >
+                        {copiedLink === guest.id ? (
+                          <>
+                            <Check className="w-3.5 h-3.5 text-earth-gold" />
+                            <span className="text-earth-sage-dark font-bold">Tersalin!</span>
+                          </>
+                        ) : (
+                          <>
+                            <LinkIcon className="w-3.5 h-3.5 text-earth-gold" />
+                            <span>Salin Link</span>
+                          </>
+                        )}
+                      </button>
+
+                      <button
+                        onClick={() => copyWaText(guest)}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-earth-beige border border-earth-gold/30 hover:bg-earth-beige-dark text-xs font-medium text-earth-charcoal transition-colors"
+                        title="Salin Teks WhatsApp Lengkap"
+                      >
+                        {copiedWaText === guest.id ? (
+                          <>
+                            <Check className="w-3.5 h-3.5 text-earth-gold" />
+                            <span className="text-earth-sage-dark font-bold">Teks WA Tersalin!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3.5 h-3.5 text-earth-gold" />
+                            <span>Salin Teks WA</span>
+                          </>
+                        )}
+                      </button>
+
+                      <button
+                        onClick={() => sendWhatsApp(guest)}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-green-700 text-white hover:bg-green-800 text-xs font-medium transition-colors"
+                        title="Buka WhatsApp Langsung"
+                      >
+                        <Send className="w-3.5 h-3.5" />
+                        <span>Kirim WA</span>
+                      </button>
+
+                      <button
+                        onClick={() => handleDeleteGuest(guest.id)}
+                        className="p-1.5 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
+                        title="Hapus Tamu"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         )}
@@ -629,7 +526,7 @@ Terima kasih.
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div className="bg-earth-beige-soft p-5 rounded-2xl border border-earth-gold/30 shadow-soft">
                 <span className="text-xs uppercase tracking-wider text-earth-sage-dark font-semibold">
-                  Tamu Tercatat
+                  Tamu Terdaftar
                 </span>
                 <p className="font-serif text-3xl font-bold text-earth-charcoal mt-1">
                   {analytics.totalGuests}
@@ -669,7 +566,7 @@ Terima kasih.
                 Petunjuk Koordinasi Katering
               </h3>
               <p className="text-xs sm:text-sm text-earth-charcoal/80 leading-relaxed">
-                Estimasi porsi di atas dihitung otomatis setiap kali ada tamu yang mengisi konfirmasi <strong>Hadir</strong> beserta jumlah orang yang mereka bawa (1 sampai 5 orang). Anda dapat menggunakan data ini untuk penyesuaian porsi katering pada H-7 pernikahan.
+                Estimasi porsi di atas dihitung otomatis setiap kali ada tamu yang mengisi konfirmasi <strong>Hadir</strong> beserta jumlah orang yang mereka bawa (1 sampai 5 orang). Anda dapat menggunakan angka akumulasi ini untuk koordinasi porsi makanan dengan vendor katering.
               </p>
             </div>
           </div>
@@ -701,9 +598,6 @@ Terima kasih.
                     <div className="flex items-center gap-2">
                       <span className="font-serif font-bold text-sm text-earth-charcoal">
                         {w.name}
-                      </span>
-                      <span className="text-[10px] text-earth-sage-dark">
-                        ({w.relationship || 'Tamu'})
                       </span>
                       {!w.is_visible && (
                         <span className="text-[9px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-semibold">
