@@ -1,86 +1,77 @@
 # Undangan Pernikahan Digital
 > **by skywannn wedding**
 
-Aplikasi web Undangan Pernikahan Digital dengan konsep desain *Editorial & Handcrafted Fine-Art*. Dilengkapi musik latar otomatis (*gesture trigger*), galeri foto interaktif, form RSVP & wall ucapan real-time, pengingat Google Calendar & kalender ponsel, serta Dashboard Pengantin.
+Aplikasi web Undangan Pernikahan Digital dengan konsep desain *Editorial & Handcrafted Fine-Art*. Dilengkapi fitur musik latar otomatis (*gesture trigger*), galeri foto interaktif (*masonry grid & lightbox*), form RSVP & wall ucapan real-time, integrasi Google Calendar, amplop digital, serta Dashboard Admin untuk manajemen tamu dan porsi katering.
 
 ---
 
-## 📌 Panduan: Di File Mana Mengubah Kata, Kalimat & Foto?
+## 💻 Cara Menjalankan Proyek
 
-Untuk memudahkan Anda mengubah seluruh isi undangan, seluruh data telah dipusatkan pada file berikut:
+1. **Instalasi Dependensi:**
+   ```bash
+   npm install
+   ```
 
-### 1. Mengubah Kata-Kata, Nama Mempelai, Tanggal, Lokasi & Rekening
-👉 **File: `src/lib/weddingData.ts`** *(atau `src/lib/supabase.ts`)*
-Buka file tersebut, Anda dapat langsung mengganti:
-- **Nama Pengantin Pria & Wanita:** Bagian `groom` dan `bride` (nama lengkap, panggilan, nama ayah & ibu, akun Instagram).
-- **Kutipan / Doa:** Bagian `quote` (teks ayat suci dan sumbernya).
-- **Tanggal Hari-H & Hitung Mundur:** Bagian `eventDateIso`.
-- **Jadwal Akad & Resepsi:** Bagian `akad` dan `reception` (hari, tanggal, jam, nama gedung, dan alamat lengkap).
-- **Tautan Google Maps:** Bagian `maps` (link Google Maps).
-- **Nomor Rekening & Hadiah Digital:** Bagian `gifts` (nama bank, nomor rekening, nama pemilik, dan alamat pengiriman kado).
-- **Kisah Cinta (Love Story):** Bagian `stories` (tanggal momen, judul, dan cerita pertemuan).
-- **Takarir Galeri Foto:** Bagian `gallery` (caption foto).
-
-### 2. Mengubah Foto & Musik
-Semua file media tersimpan di dalam folder **`public/`**:
-- **Foto Utama Mempelai (Hero):** Ganti file `public/img/images.jpg`
-- **Foto Pengantin Pria:** Ganti file `public/img/juan.jpeg`
-- **Foto Pengantin Wanita:** Ganti file `public/img/una.jpeg`
-- **Foto Gambar QRIS / DANA:** Ganti file `public/img/dana.jpeg`
-- **Foto-Foto Galeri:** Simpan di dalam folder `public/img/gallery/`
-- **Musik Latar Undangan:** Ganti file lagu MP3 di `public/audio/wedding-song.mp3`
-
-*(Tips: Jika Anda mengganti foto dengan file foto Anda sendiri, pastikan nama filenya disamakan atau perbarui nama jalurnya di file `src/lib/weddingData.ts`).*
-
----
-
-## 🚀 Alur Kerja & Penyebaran Undangan (Anti-Ribet)
-
-Anda memiliki **2 cara praktis** untuk menyebarkan undangan ke tamu:
-
-### Cara 1: Satu Link Utama untuk Ribuan Tamu (Sangat Direkomendasikan)
-Cukup bagikan link utama website Anda ke grup WhatsApp keluarga, rekan kerja, alumni, dll:
-```text
-https://domain-anda.com/
-```
-- **Sapaan di Cover:** Menampilkan sapaan sopan: *"Kepada Yth. Bapak/Ibu/Saudara/i Tamu Undangan"*.
-- **RSVP Otomatis:** Tamu mengetik nama mereka sendiri saat mengisi konfirmasi kehadiran dan ucapan.
-- **Hasil:** Konfirmasi kehadiran dan ucapan mereka langsung otomatis masuk ke tabel RSVP dan rekap porsi katering di Dashboard Pengantin. Anda **tidak perlu menginput nama tamu satu per satu**!
-
-### Cara 2: Link Personal Otomatis Tanpa Input Database
-Jika ingin nama tamu tertentu langsung tertulis di cover pembuka saat mereka membuka link:
-Cukup tambahkan `?to=Nama+Tamu` di ujung link:
-```text
-https://domain-anda.com/?to=Bapak+Joko+Santoso
-```
-Cover otomatis tertulis *"Kepada Yth. Bapak/Ibu/Saudara/i Bapak Joko Santoso"* dan kolom nama di form RSVP langsung terisi secara instan!
-
----
-
-## 🔐 Cara Mengakses Dashboard Pengantin
-
-Untuk menjaga keindahan visual undangan, **tidak ada tombol login admin di halaman publik**. 
-Halaman undangan tetap bersih dan murni untuk para tamu.
-
-- **Cara Masuk ke Dashboard:**  
-  Buka langsung alamat URL berikut di browser Anda:
-  ```text
-  https://domain-anda.com/admin
-  ```
-- **PIN Keamanan Default:** `123456`
-- **Fitur Dashboard:**
-  1. **Salin Teks WhatsApp:** Teks broadcast siap sebar dalam 1 klik.
-  2. **Rekap RSVP & Porsi:** Memantau jumlah tamu hadir dan total porsi katering yang dibutuhkan.
-  3. **Moderasi Ucapan:** Menampilkan, menyembunyikan, atau menghapus ucapan spam.
-
----
-
-## 💻 Menjalankan di Komputer Lokal
-
-1. **Jalankan Aplikasi:**
+2. **Jalankan Server Lokal:**
    ```bash
    npm run dev
    ```
-2. Buka browser pada alamat:
-   - Undangan Tamu: `http://localhost:3000`
-   - Dashboard Pengantin: `http://localhost:3000/admin`
+
+3. **Buka di Browser:**
+   - **Halaman Undangan:** [http://localhost:3000](http://localhost:3000)
+   - **Dashboard Admin:** [http://localhost:3000/admin](http://localhost:3000/admin) *(PIN: `123456`)*
+
+---
+
+## ✏️ Panduan Mengubah Data & Foto
+
+Seluruh teks dan media dipusatkan pada lokasi berikut agar mudah disesuaikan:
+
+### 1. Mengubah Teks, Tanggal, Lokasi, dan Nomor Rekening
+Semua teks berada di dalam satu file:  
+👉 **`src/lib/weddingData.ts`**
+
+Buka file tersebut untuk mengubah:
+- **Nama Mempelai & Orang Tua:** Bagian `groom` (pria) dan `bride` (wanita).
+- **Kutipan / Doa:** Bagian `quote`.
+- **Waktu Hari-H (Countdown):** Bagian `eventDateIso`.
+- **Jadwal & Tempat:** Bagian `akad` dan `reception`.
+- **Link Google Maps:** Bagian `maps`.
+- **Nomor Rekening Bank & QRIS:** Bagian `gifts`.
+- **Kisah Cinta (Love Story):** Bagian `stories`.
+- **Takarir / Caption Foto:** Bagian `gallery`.
+
+### 2. Mengubah Foto & Lagu
+Semua file media berada di dalam folder:  
+👉 **`public/`**
+
+- **Foto Utama (Cover Atas):** Ganti file `public/img/images.jpg`
+- **Foto Mempelai Pria:** Ganti file `public/img/juan.jpeg`
+- **Foto Mempelai Wanita:** Ganti file `public/img/una.jpeg`
+- **Foto Barcode QRIS / DANA:** Ganti file `public/img/dana.jpeg`
+- **Foto-Foto Galeri:** Simpan di dalam folder `public/img/gallery/`
+- **Lagu Latar (Audio):** Ganti file lagu di `public/audio/wedding-song.mp3`
+
+---
+
+## 🔐 Dashboard Admin (`/admin`)
+
+Halaman undangan pernikahan tidak menampilkan tombol login agar tampilan tetap bersih dan sakral bagi tamu undangan.
+
+- **Akses Dashboard:** Buka URL `/admin` pada browser Anda.
+- **PIN Keamanan:** `123456`
+- **Fitur Utama:**
+  1. **Manajemen Tamu (Guest Link Generator):** Masukkan nama tamu dan nomor WhatsApp, sistem akan membuatkan link undangan unik (`/to/[nama-tamu]?token=...`). Tersedia tombol langsung untuk menyalin link, menyalin teks undangan, atau langsung membuka WhatsApp.
+  2. **Rekap RSVP & Porsi:** Memantau konfirmasi kehadiran tamu (Hadir, Tidak Hadir) dan akumulasi total porsi katering.
+  3. **Moderasi Ucapan:** Meninjau doa restu yang masuk, menyembunyikan pesan, atau menghapus ucapan spam.
+
+---
+
+## 🛠️ Teknologi yang Digunakan
+
+- **Frontend:** Next.js 15 (App Router), React 19, TypeScript
+- **Styling:** Tailwind CSS (Palet Earthy Warm Beige, Sage & Champagne Gold)
+- **Animasi:** Framer Motion & Canvas Confetti
+- **Ikon:** Lucide React
+- **Basis Data & Realtime:** Supabase (PostgreSQL) dengan Row Level Security (RLS)
+- **Audio API:** HTML5 Audio Context dengan Gesture Unlock
