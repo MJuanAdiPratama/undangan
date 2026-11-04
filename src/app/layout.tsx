@@ -1,0 +1,53 @@
+import type { Metadata } from 'next';
+import { Cormorant_Garamond, Plus_Jakarta_Sans, Alex_Brush } from 'next/font/google';
+import './globals.css';
+import { AudioProvider } from '@/components/audio/AudioContext';
+
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-cormorant',
+  display: 'swap',
+});
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-jakarta',
+  display: 'swap',
+});
+
+const alex = Alex_Brush({
+  subsets: ['latin'],
+  weight: ['400'],
+  variable: '--font-alex',
+  display: 'swap',
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://skywannn-wedding.vercel.app'),
+  title: 'The Wedding of Juan & Una | skywannn wedding',
+  description:
+    'Undangan Pernikahan Digital Handcrafted Fine-Art Juan & Una. Diselenggarakan pada Minggu, 10 Desember 2026 di Bandung, Jawa Barat.',
+  openGraph: {
+    title: 'The Wedding of Juan & Una',
+    description: 'Undangan Pernikahan Digital Juan & Una',
+    images: ['/img/images.jpg'],
+  },
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="id" className={`${cormorant.variable} ${jakarta.variable} ${alex.variable}`}>
+      <body className="antialiased min-h-screen bg-earth-beige text-earth-charcoal selection:bg-earth-gold/20 selection:text-earth-charcoal">
+        <AudioProvider audioSrc="/audio/wedding-song.mp3">
+          {children}
+        </AudioProvider>
+      </body>
+    </html>
+  );
+}
