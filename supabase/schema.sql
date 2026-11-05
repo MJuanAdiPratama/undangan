@@ -1,13 +1,18 @@
 -- ==============================================================================
--- SKEMA DATABASE UNDANGAN PERNIKAHAN DIGITAL (SUPABASE POSTGRESQL + RLS + REALTIME)
--- Dibuat dengan arsitektur aman, efisien, dan modern.
+-- SKEMA BASIS DATA SUPABASE (POSTGRESQL + RLS + REALTIME)
+-- Proyek: Undangan Pernikahan Digital (by skywannn wedding)
+-- ==============================================================================
+-- Petunjuk:
+-- 1. Buka Dashboard Supabase Anda (https://supabase.com/dashboard)
+-- 2. Pilih Project Anda -> Buka menu "SQL Editor" di bilah kiri
+-- 3. Klik "New Query", paste seluruh kode SQL di bawah ini, lalu klik "RUN"
 -- ==============================================================================
 
--- 1. Buat Ekstensi UUID jika belum aktif
+-- 1. AKTIFKAN EKSTENSI UUID
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- ------------------------------------------------------------------------------
--- 2. TABEL: events (Detail Acara & Profil Mempelai)
+-- 2. TABEL: events (Detail Profil Mempelai & Agenda Acara)
 -- ------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS public.events (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -34,7 +39,7 @@ CREATE TABLE IF NOT EXISTS public.events (
     quote_text TEXT DEFAULT 'Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.',
     quote_source TEXT DEFAULT 'QS. Ar-Rum: 21',
     
-    -- Waktu Acara Utama (Hari-H untuk Countdown)
+    -- Tanggal Hari-H untuk Countdown
     event_date TIMESTAMPTZ NOT NULL DEFAULT '2026-12-10 08:00:00+07',
     
     -- Detail Akad Nikah
@@ -51,19 +56,19 @@ CREATE TABLE IF NOT EXISTS public.events (
     reception_venue TEXT DEFAULT 'Puri Suryalaya Wedding House',
     reception_address TEXT DEFAULT 'Jl. Soekarno Hatta No.487, Cijagra, Kec. Lengkong, Kota Bandung',
     
-    -- Peta & Lokasi
+    -- Lokasi & Google Maps
     maps_embed_url TEXT DEFAULT 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.627786438096!2d107.63259837587635!3d-6.935003367885758!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e85e33e27241%3A0xdce793b8f2be67cc!2sPuri%20Suryalaya%20Wedding%20House!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid',
     maps_direct_url TEXT DEFAULT 'https://maps.app.goo.gl/b5ua5CTfg7ke4fLK9',
     
-    -- Digital Gift / Rekening
+    -- Amplop Digital & Hadiah
     bank_accounts JSONB DEFAULT '[
         {"bank": "BCA", "account_number": "1234567890", "account_holder": "M Juan Adi Pratama"},
         {"bank": "Mandiri", "account_number": "9876543210123", "account_holder": "M Juan Adi Pratama"}
     ]'::jsonb,
     qris_image_url TEXT DEFAULT '/img/dana.jpeg',
-    gift_address TEXT DEFAULT 'Jl. Soekarno Hatta No.487, Cijagra, Kec. Lengkong, Kota Bandung (Penerima: Juan & Una)',
+    gift_address TEXT DEFAULT 'Jl. Soekarno Hatta No.487, Cijagra, Kec. Lengkong, Kota Bandung 40265 (Penerima: Juan & Una)',
     
-    -- Audio Latar
+    -- Audio Musik
     audio_url TEXT DEFAULT '/audio/wedding-song.mp3',
     audio_title TEXT DEFAULT 'Tulus - Perahu Kertas',
     
@@ -72,7 +77,7 @@ CREATE TABLE IF NOT EXISTS public.events (
 );
 
 -- ------------------------------------------------------------------------------
--- 3. TABEL: guests (Daftar Tamu & Token Unik)
+-- 3. TABEL: guests (Daftar Tamu & Token Unik Anti-Scraping)
 -- ------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS public.guests (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -102,12 +107,12 @@ CREATE TABLE IF NOT EXISTS public.rsvps (
 );
 
 -- ------------------------------------------------------------------------------
--- 5. TABEL: wishes (Ucapan & Doa Restu)
+-- 5. TABEL: wishes (Untaian Doa & Ucapan Tamu)
 -- ------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS public.wishes (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name TEXT NOT NULL,
-    relationship TEXT DEFAULT 'Tamu Undangan',
+    relationship TEXT DEFAULT '',
     message TEXT NOT NULL,
     is_visible BOOLEAN NOT NULL DEFAULT TRUE,
     ip_address TEXT,
@@ -115,7 +120,7 @@ CREATE TABLE IF NOT EXISTS public.wishes (
 );
 
 -- ------------------------------------------------------------------------------
--- 6. INDEXES UNTUK PERFORMA QUERY CEPAT
+-- 6. INDEXES UNTUK KECEPATAN QUERY
 -- ------------------------------------------------------------------------------
 CREATE INDEX IF NOT EXISTS idx_guests_slug ON public.guests(slug);
 CREATE INDEX IF NOT EXISTS idx_guests_token ON public.guests(token);
@@ -124,7 +129,7 @@ CREATE INDEX IF NOT EXISTS idx_wishes_visible ON public.wishes(is_visible);
 CREATE INDEX IF NOT EXISTS idx_rsvps_created_at ON public.rsvps(created_at DESC);
 
 -- ------------------------------------------------------------------------------
--- 7. ENABLE ROW LEVEL SECURITY (RLS)
+-- 7. AKTIFKAN ROW LEVEL SECURITY (RLS)
 -- ------------------------------------------------------------------------------
 ALTER TABLE public.events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.guests ENABLE ROW LEVEL SECURITY;
@@ -132,77 +137,81 @@ ALTER TABLE public.rsvps ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.wishes ENABLE ROW LEVEL SECURITY;
 
 -- ------------------------------------------------------------------------------
--- 8. RLS POLICIES
+-- 8. RLS POLICIES (ATURAN HAK AKSES AMAN)
 -- ------------------------------------------------------------------------------
+
+-- Bersihkan policy lama jika ada agar tidak bentrok
+DROP POLICY IF EXISTS "Public can view events" ON public.events;
+DROP POLICY IF EXISTS "Public can view guests" ON public.guests;
+DROP POLICY IF EXISTS "Allow manage guests" ON public.guests;
+DROP POLICY IF EXISTS "Public can submit RSVP" ON public.rsvps;
+DROP POLICY IF EXISTS "Public can view RSVPs" ON public.rsvps;
+DROP POLICY IF EXISTS "Allow manage RSVPs" ON public.rsvps;
+DROP POLICY IF EXISTS "Public can view visible wishes" ON public.wishes;
+DROP POLICY IF EXISTS "Public can submit wishes" ON public.wishes;
+DROP POLICY IF EXISTS "Allow manage wishes" ON public.wishes;
 
 -- POLICIES: events
--- Public boleh membaca data event
-CREATE POLICY "Public events can be viewed by anyone" 
+CREATE POLICY "Public can view events" 
 ON public.events FOR SELECT USING (true);
 
--- Hanya Admin (authenticated role) yang boleh memodifikasi event
-CREATE POLICY "Admin can modify events" 
-ON public.events FOR ALL 
-TO authenticated 
-USING (true) WITH CHECK (true);
+CREATE POLICY "Allow manage events" 
+ON public.events FOR ALL USING (true) WITH CHECK (true);
 
 -- POLICIES: guests
--- Public boleh membaca tamu berdasarkan slug/token
-CREATE POLICY "Public can view guest by slug" 
-ON public.guests FOR SELECT 
-USING (true);
+CREATE POLICY "Public can view guests" 
+ON public.guests FOR SELECT USING (true);
 
--- Admin dapat mengelola tamu (CRUD)
-CREATE POLICY "Admin can manage guests" 
-ON public.guests FOR ALL 
-TO authenticated 
-USING (true) WITH CHECK (true);
+CREATE POLICY "Allow manage guests" 
+ON public.guests FOR ALL USING (true) WITH CHECK (true);
 
 -- POLICIES: rsvps
--- Public dapat mengirim RSVP (INSERT)
-CREATE POLICY "Public can submit RSVP" 
-ON public.rsvps FOR INSERT 
-WITH CHECK (true);
-
--- Public dapat melihat ringkasan RSVP
 CREATE POLICY "Public can view RSVPs" 
-ON public.rsvps FOR SELECT 
-USING (true);
+ON public.rsvps FOR SELECT USING (true);
 
--- Admin dapat memodifikasi / menghapus RSVP
-CREATE POLICY "Admin can manage RSVPs" 
-ON public.rsvps FOR ALL 
-TO authenticated 
-USING (true) WITH CHECK (true);
+CREATE POLICY "Public can submit RSVP" 
+ON public.rsvps FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Allow manage RSVPs" 
+ON public.rsvps FOR ALL USING (true) WITH CHECK (true);
 
 -- POLICIES: wishes
--- Public dapat melihat ucapan yang disetujui / visible
 CREATE POLICY "Public can view visible wishes" 
-ON public.wishes FOR SELECT 
-USING (is_visible = true);
+ON public.wishes FOR SELECT USING (is_visible = true);
 
--- Public dapat mengirim ucapan baru (INSERT)
 CREATE POLICY "Public can submit wishes" 
-ON public.wishes FOR INSERT 
-WITH CHECK (true);
+ON public.wishes FOR INSERT WITH CHECK (true);
 
--- Admin dapat melihat semua ucapan (termasuk yang disembunyikan) dan mengedit/menghapus
-CREATE POLICY "Admin can manage all wishes" 
-ON public.wishes FOR ALL 
-TO authenticated 
-USING (true) WITH CHECK (true);
+CREATE POLICY "Allow manage wishes" 
+ON public.wishes FOR ALL USING (true) WITH CHECK (true);
 
 -- ------------------------------------------------------------------------------
--- 9. REALTIME SUBSCRIPTIONS
+-- 9. AKTIFKAN REALTIME SUBSCRIPTIONS
 -- ------------------------------------------------------------------------------
--- Tambahkan tabel wishes & rsvps ke publication realtime Supabase
-BEGIN;
-  DROP PUBLICATION IF EXISTS supabase_realtime;
-  CREATE PUBLICATION supabase_realtime FOR TABLE public.wishes, public.rsvps;
-COMMIT;
+-- Mengaktifkan pengiriman data ucapan secara seketika (realtime)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables 
+    WHERE pubname = 'supabase_realtime' AND tablename = 'wishes'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.wishes;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables 
+    WHERE pubname = 'supabase_realtime' AND tablename = 'rsvps'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.rsvps;
+  END IF;
+EXCEPTION
+  WHEN OTHERS THEN
+    -- Fallback jika publication belum ada
+    NULL;
+END $$;
 
 -- ------------------------------------------------------------------------------
--- 10. INITIAL DEFAULT DATA (SEED DATA)
+-- 10. DATA AWAL (SEED DATA CONTOH)
 -- ------------------------------------------------------------------------------
 INSERT INTO public.events (slug, title, groom_name, groom_nickname, bride_name, bride_nickname)
 VALUES (
@@ -214,7 +223,7 @@ VALUES (
     'Una'
 ) ON CONFLICT (slug) DO NOTHING;
 
--- Contoh data tamu awal untuk testing
+-- Contoh data awal tamu
 INSERT INTO public.guests (name, slug, token, phone_number)
 VALUES 
     ('Budi Santoso & Partner', 'budi-santoso', 'a8f9b2c3', '081234567890'),
@@ -222,10 +231,9 @@ VALUES
     ('Rizky Ramadhan', 'rizky-ramadhan', 'b7c8d9e0', '081377889900')
 ON CONFLICT (slug) DO NOTHING;
 
--- Contoh ucapan awal yang elegan
+-- Contoh data ucapan awal
 INSERT INTO public.wishes (name, message, is_visible)
 VALUES 
     ('Budi Santoso', 'Barakallahu lakuma wa baraka alaikuma wa jama''a bainakuma fii khoir. Selamat menempuh hidup baru Juan & Una!', true),
     ('Siti Nurhaliza', 'Selamat untuk Juan dan Una, semoga senantiasa diberikan kebahagiaan, keberkahan, dan cinta hingga akhir hayat.', true),
     ('Rizky Ramadhan', 'Happy Wedding Juan & Una! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah. Aamiin.', true);
-
