@@ -1,8 +1,91 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <rect width="64" height="64" rx="16" fill="#2C3E35" />
-  <circle cx="32" cy="32" r="24" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-dasharray="2 2" />
-  <circle cx="32" cy="32" r="21" fill="none" stroke="#D4AF37" stroke-width="1" opacity="0.6" />
-  <path d="M32 38.5s-8.5-5.2-8.5-11.2a5 5 0 0 1 8.5-3.3 5 5 0 0 1 8.5 3.3c0 6-8.5 11.2-8.5 11.2z" fill="#D4AF37" />
-  <polygon points="32,14 33.5,18.5 38,20 33.5,21.5 32,26 30.5,21.5 26,20 30.5,18.5" fill="#F7F3EB" opacity="0.9" />
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <!-- Background Gradient: Deep Charcoal Emerald Forest -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2D4237" />
+      <stop offset="45%" stop-color="#1E2F26" />
+      <stop offset="100%" stop-color="#121C17" />
+    </linearGradient>
 
+    <!-- Metallic Champagne Gold Gradient -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF5D1" />
+      <stop offset="25%" stop-color="#ECD083" />
+      <stop offset="60%" stop-color="#D4AF37" />
+      <stop offset="90%" stop-color="#A68326" />
+      <stop offset="100%" stop-color="#FBF0C6" />
+    </linearGradient>
+
+    <!-- Soft Radial Gold Ambient Glow -->
+    <radialGradient id="goldGlow" cx="50%" cy="48%" r="52%">
+      <stop offset="0%" stop-color="#D4AF37" stop-opacity="0.3" />
+      <stop offset="65%" stop-color="#D4AF37" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#D4AF37" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Base Squircle Badge -->
+  <rect width="128" height="128" rx="28" fill="url(#bgGrad)" />
+
+  <!-- Ambient Gold Glow -->
+  <circle cx="64" cy="58" r="50" fill="url(#goldGlow)" />
+
+  <!-- Outer Fine-Art Gold Border -->
+  <rect x="5.5" y="5.5" width="117" height="117" rx="24" fill="none" stroke="url(#goldGrad)" stroke-width="2.2" opacity="0.95" />
+  
+  <!-- Inner Delicate Dotted Frame -->
+  <rect x="9.5" y="9.5" width="109" height="109" rx="20" fill="none" stroke="url(#goldGrad)" stroke-width="0.75" stroke-dasharray="2.5 2" opacity="0.5" />
+
+  <!-- Celestial Diamond Sparkle & Wedding Rings Motif (Top) -->
+  <g transform="translate(64, 22)">
+    <!-- Intertwined Wedding Rings -->
+    <ellipse cx="-6" cy="1" rx="8" ry="4" transform="rotate(-15 -6 1)" fill="none" stroke="url(#goldGrad)" stroke-width="1.1" opacity="0.6" />
+    <ellipse cx="6" cy="1" rx="8" ry="4" transform="rotate(15 6 1)" fill="none" stroke="url(#goldGrad)" stroke-width="1.1" opacity="0.6" />
+    
+    <!-- Radiant Diamond Star -->
+    <path d="M0 -9 Q0 0 9 0 Q0 0 0 9 Q0 0 -9 0 Q0 0 0 -9 Z" fill="url(#goldGrad)" />
+    <!-- Miniature Starlight Accents -->
+    <circle cx="-18" cy="0" r="1.2" fill="#FFF5D1" opacity="0.75" />
+    <circle cx="18" cy="0" r="1.2" fill="#FFF5D1" opacity="0.75" />
+  </g>
+
+  <!-- Monogram SW (Skywannn Wedding) -->
+  <text 
+    x="64" 
+    y="74" 
+    font-family="'Times New Roman', 'Georgia', 'Cormorant Garamond', 'Cinzel', serif" 
+    font-size="44" 
+    font-weight="700" 
+    letter-spacing="2" 
+    text-anchor="middle" 
+    fill="url(#goldGrad)"
+  >SW</text>
+
+  <!-- Elegant Gold Divider Line with Center Diamond -->
+  <line x1="36" y1="83" x2="92" y2="83" stroke="url(#goldGrad)" stroke-width="0.8" opacity="0.7" />
+  <polygon points="64,81 66,83 64,85 62,83" fill="url(#goldGrad)" />
+
+  <!-- Brand Subtitle: SKYWNN WEDDING -->
+  <text 
+    x="64" 
+    y="98" 
+    font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" 
+    font-size="9" 
+    font-weight="700" 
+    letter-spacing="4" 
+    text-anchor="middle" 
+    fill="#FDF3CE"
+  >SKYWNN</text>
+
+  <text 
+    x="64" 
+    y="110" 
+    font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" 
+    font-size="7" 
+    font-weight="600" 
+    letter-spacing="3" 
+    text-anchor="middle" 
+    fill="#D4AF37" 
+    opacity="0.9"
+  >WEDDING</text>
+</svg>

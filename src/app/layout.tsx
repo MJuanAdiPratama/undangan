@@ -30,7 +30,10 @@ export const metadata: Metadata = {
   description:
     'Undangan Pernikahan Digital Handcrafted Fine-Art Arya & Adelia. Diselenggarakan pada Minggu, 10 Desember 2026 di Bandung, Jawa Barat.',
   icons: {
-    icon: '/icon.svg',
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
     shortcut: '/icon.svg',
     apple: '/icon.svg',
   },
