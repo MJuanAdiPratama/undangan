@@ -301,7 +301,7 @@ Salam hangat,
             </div>
             <div>
               <h1 className="font-serif text-lg font-bold tracking-wide">
-                Dashboard Undangan &bull; Juan &amp; Una
+                Dashboard Undangan &bull; Arya &amp; Adelia
               </h1>
               <p className="text-[10px] text-earth-gold-light uppercase tracking-widest">
                 skywannn wedding system

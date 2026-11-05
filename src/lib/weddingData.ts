@@ -2,19 +2,16 @@
  * ==============================================================================
  * PUSAT PENGATURAN KATA-KATA, TANGGAL, LOKASI, REKENING & FOTO UNDANGAN
  * ==============================================================================
- * Anda dapat mengubah semua kata-kata, nama mempelai, tanggal acara, lokasi,
- * nomor rekening, dan foto pernikahan langsung pada file ini!
  */
 
 export interface WeddingData {
-  // 1. DATA PENGANTIN
   groom: {
     fullName: string;
     nickName: string;
     fatherName: string;
     motherName: string;
     instagram: string;
-    photo: string; // Lokasi file foto pengantin pria di folder public/img/
+    photo: string;
   };
   bride: {
     fullName: string;
@@ -22,19 +19,13 @@ export interface WeddingData {
     fatherName: string;
     motherName: string;
     instagram: string;
-    photo: string; // Lokasi file foto pengantin wanita di folder public/img/
+    photo: string;
   };
-
-  // 2. KUTIPAN / AYAT SUCI
   quote: {
     text: string;
     source: string;
   };
-
-  // 3. JADWAL HARI-H (Digunakan untuk Countdown Timer)
-  eventDateIso: string; // Format: TAHUN-BULAN-HARI Jam:Menit:Detik
-
-  // 4. DETAIL ACARA AKAD NIKAH
+  eventDateIso: string;
   akad: {
     title: string;
     date: string;
@@ -42,8 +33,6 @@ export interface WeddingData {
     venue: string;
     address: string;
   };
-
-  // 5. DETAIL ACARA RESEPSI
   reception: {
     title: string;
     date: string;
@@ -51,39 +40,29 @@ export interface WeddingData {
     venue: string;
     address: string;
   };
-
-  // 6. PETA & LOKASI
   maps: {
-    embedUrl: string; // URL iframe dari Google Maps
-    googleMapsUrl: string; // Link yang membuka aplikasi Google Maps di HP
+    embedUrl: string;
+    googleMapsUrl: string;
   };
-
-  // 7. HADIAH DIGITAL & NOMOR REKENING
   gifts: {
     bankAccounts: Array<{
       bankName: string;
       accountNumber: string;
       holderName: string;
     }>;
-    qrisImage: string; // Foto QRIS/DANA di folder public/img/
-    shippingAddress: string; // Alamat untuk kirim kado fisik
+    qrisImage: string;
+    shippingAddress: string;
   };
-
-  // 8. MUSIK LATAR
   audio: {
     title: string;
-    src: string; // File lagu di folder public/audio/
+    src: string;
   };
-
-  // 9. KISAH CINTA (LOVE STORY)
   stories: Array<{
     date: string;
     title: string;
     description: string;
     image: string;
   }>;
-
-  // 10. GALERI FOTO
   gallery: Array<{
     id: string;
     src: string;
@@ -95,20 +74,20 @@ export interface WeddingData {
 export const weddingData: WeddingData = {
   // 1. DATA PENGANTIN
   groom: {
-    fullName: 'M Juan Adi Pratama',
-    nickName: 'Juan',
-    fatherName: 'Bapak Lorem',
-    motherName: 'Ibu Ipsum',
-    instagram: 'qxuan.03',
-    photo: '/img/juan.jpeg',
+    fullName: 'Arya Pratama, S.T.',
+    nickName: 'Arya',
+    fatherName: 'Bapak Hendra Kusuma',
+    motherName: 'Ibu Dewi Anggraeni',
+    instagram: 'aryapratama',
+    photo: '/img/groom.jpg',
   },
   bride: {
-    fullName: 'Nadya Una',
-    nickName: 'Una',
-    fatherName: 'Bapak Situmorang',
-    motherName: 'Ibu Rahayu',
-    instagram: 'nadyauna',
-    photo: '/img/una.jpeg',
+    fullName: 'Adelia Larasati, S.Ds.',
+    nickName: 'Adelia',
+    fatherName: 'Bapak Bambang Sutedjo',
+    motherName: 'Ibu Sri Wahyuni',
+    instagram: 'adelialarasati',
+    photo: '/img/bride.jpg',
   },
 
   // 2. KUTIPAN / AYAT SUCI
@@ -150,18 +129,18 @@ export const weddingData: WeddingData = {
     bankAccounts: [
       {
         bankName: 'BCA',
-        accountNumber: '1234567890',
-        holderName: 'M Juan Adi Pratama',
+        accountNumber: '8690123456',
+        holderName: 'Arya Pratama',
       },
       {
         bankName: 'Mandiri',
-        accountNumber: '9876543210123',
-        holderName: 'M Juan Adi Pratama',
+        accountNumber: '1370012345678',
+        holderName: 'Arya Pratama',
       },
     ],
-    qrisImage: '/img/dana.jpeg',
+    qrisImage: '/img/qris.svg',
     shippingAddress:
-      'Jl. Soekarno Hatta No.487, Cijagra, Kec. Lengkong, Kota Bandung 40265 (Penerima: Juan & Una / 081293066707)',
+      'Jalan Dago Asri No. 28, Dago, Kec. Coblong, Kota Bandung 40135 (Penerima: Arya & Adelia / 081234567890)',
   },
 
   // 8. AUDIO LATAR
@@ -173,73 +152,72 @@ export const weddingData: WeddingData = {
   // 9. KISAH CINTA (TIMELINE)
   stories: [
     {
-      date: '20 September 2019',
-      title: 'Pertemuan Pertama',
+      date: '24 September 2020',
+      title: 'Awal Pertemuan',
       description:
-        'Dipertemukan dalam sebuah kegiatan kampus yang tak terduga. Sapaan singkat yang menjadi awal perjalanan panjang penuh rasa dan asa.',
-      image: '/img/gunung2.jpg',
+        'Pertemuan sederhana di sudut kedai kopi Bandung saat senja menyapa. Percakapan hangat yang tak disengaja perlahan menumbuhkan rasa saling mengagumi.',
+      image: '/img/story-1.jpg',
     },
     {
-      date: '20 Juni 2020',
-      title: 'Memulai Komitmen',
+      date: '15 Juli 2022',
+      title: 'Menjalin Komitmen',
       description:
-        'Setelah banyak diskusi dan saling memahami visi hidup, kami memutuskan untuk saling menjaga hati dan melangkah bersama dengan niat yang tulus.',
-      image: '/img/gallery/una.jpg',
+        'Setelah melewati proses kedewasaan dan saling memahami visi kehidupan, kami memantapkan niat tulus untuk saling menjaga dan melangkah bersama.',
+      image: '/img/story-2.jpg',
     },
     {
-      date: '20 Agustus 2022',
+      date: '18 Agustus 2025',
       title: 'Hari Pertunangan',
       description:
-        'Di hadapan kedua keluarga besar, kami mengikat janji suci pertunangan untuk menyatukan dua keluarga dalam jalinan silaturahmi yang abadi.',
-      image: '/img/gallery/vonzy.jpg',
+        'Dengan doa restu dan kehangatan kedua keluarga besar, kami mengikat janji suci pertunangan untuk menyatukan dua keluarga dalam silaturahmi abadi.',
+      image: '/img/story-3.jpg',
     },
     {
       date: '10 Desember 2026',
       title: 'Menuju Babak Baru',
       description:
-        'InsyaAllah ikrar suci pernikahan akan mengantarkan kami menuju gerbang ibadah terpanjang, sakinah, mawaddah, dan warahmah.',
-      image: '/img/images.jpg',
+        'InsyaAllah ikrar suci pernikahan akan kami ucapkan, memulai perjalanan ibadah terpanjang untuk membangun keluarga yang sakinah, mawaddah, dan warahmah.',
+      image: '/img/story-4.jpg',
     },
   ],
 
-  // 10. GALERI FOTO
+  // 10. GALERI FOTO (UNSPLASH FINE-ART)
   gallery: [
     {
       id: 'p-1',
-      src: '/img/images.jpg',
-      caption: 'Momen Hangat Bersama di Alam Terbuka',
+      src: '/img/gallery-1.jpg',
+      caption: 'Jalinan Kasih dalam Kehangatan Nuansa Alam',
       aspectRatio: 'portrait',
     },
     {
       id: 'p-2',
-      src: '/img/gallery/una.jpg',
-      caption: 'Senyuman Tulus Menatap Masa Depan',
+      src: '/img/gallery-2.jpg',
+      caption: 'Langkah Beriringan Menatap Masa Depan Bersama',
       aspectRatio: 'square',
     },
     {
       id: 'p-3',
-      src: '/img/gallery/vonzy.jpg',
-      caption: 'Langkah Awal Menuju Janji Abadi',
+      src: '/img/gallery-3.jpg',
+      caption: 'Senyuman Penuh Syukur Menyambut Hari Bahagia',
       aspectRatio: 'portrait',
     },
     {
       id: 'p-4',
-      src: '/img/gunung2.jpg',
-      caption: 'Kedamaian di Antara Bukit Hijau',
+      src: '/img/gallery-4.jpg',
+      caption: 'Keindahan Momen Romantis di Bawah Langit Senja',
       aspectRatio: 'wide',
     },
     {
       id: 'p-5',
-      src: '/img/juan.jpeg',
-      caption: 'Potret Sang Mempelai Pria',
+      src: '/img/gallery-5.jpg',
+      caption: 'Harmoni Jiwa dalam Kesederhanaan Cinta yang Tulus',
       aspectRatio: 'square',
     },
     {
       id: 'p-6',
-      src: '/img/una.jpeg',
-      caption: 'Pesona Anggun Sang Mempelai Wanita',
+      src: '/img/gallery-6.jpg',
+      caption: 'Ikatan Janji Abadi Menuju Mahligai Rumah Tangga',
       aspectRatio: 'square',
     },
   ],
 };
-

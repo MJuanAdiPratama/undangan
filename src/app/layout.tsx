@@ -26,18 +26,18 @@ const alex = Alex_Brush({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://skywannn-wedding.vercel.app'),
-  title: 'The Wedding of Juan & Una | skywannn wedding',
+  title: 'The Wedding of Arya & Adelia | skywannn wedding',
   description:
-    'Undangan Pernikahan Digital Handcrafted Fine-Art Juan & Una. Diselenggarakan pada Minggu, 10 Desember 2026 di Bandung, Jawa Barat.',
+    'Undangan Pernikahan Digital Handcrafted Fine-Art Arya & Adelia. Diselenggarakan pada Minggu, 10 Desember 2026 di Bandung, Jawa Barat.',
   icons: {
     icon: '/icon.svg',
     shortcut: '/icon.svg',
     apple: '/icon.svg',
   },
   openGraph: {
-    title: 'The Wedding of Juan & Una',
-    description: 'Undangan Pernikahan Digital Juan & Una',
-    images: ['/img/images.jpg'],
+    title: 'The Wedding of Arya & Adelia',
+    description: 'Undangan Pernikahan Digital Arya & Adelia',
+    images: ['/img/hero.jpg'],
   },
 };
 

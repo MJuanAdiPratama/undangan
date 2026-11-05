@@ -4,52 +4,9 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
-import { GalleryPhoto } from '@/types';
+import { weddingData } from '@/lib/weddingData';
 
-const defaultPhotos: GalleryPhoto[] = [
-  {
-    id: 'p-1',
-    src: '/img/images.jpg',
-    thumbnail: '/img/images.jpg',
-    caption: 'Momen Hangat Bersama di Alam Terbuka',
-    aspectRatio: 'portrait',
-  },
-  {
-    id: 'p-2',
-    src: '/img/gallery/una.jpg',
-    thumbnail: '/img/gallery/thumbnail/unaa.jpeg',
-    caption: 'Senyuman Tulus Menatap Masa Depan',
-    aspectRatio: 'square',
-  },
-  {
-    id: 'p-3',
-    src: '/img/gallery/vonzy.jpg',
-    thumbnail: '/img/gallery/thumbnail/vonzy.jpg',
-    caption: 'Langkah Awal Menuju Janji Abadi',
-    aspectRatio: 'portrait',
-  },
-  {
-    id: 'p-4',
-    src: '/img/gunung2.jpg',
-    thumbnail: '/img/gunung2.jpg',
-    caption: 'Kedamaian di Antara Bukit Hijau',
-    aspectRatio: 'wide',
-  },
-  {
-    id: 'p-5',
-    src: '/img/juan.jpeg',
-    thumbnail: '/img/juan.jpeg',
-    caption: 'Potret Sang Mempelai Pria',
-    aspectRatio: 'square',
-  },
-  {
-    id: 'p-6',
-    src: '/img/una.jpeg',
-    thumbnail: '/img/una.jpeg',
-    caption: 'Pesona Anggun Sang Mempelai Wanita',
-    aspectRatio: 'square',
-  },
-];
+const defaultPhotos = weddingData.gallery;
 
 export default function GallerySection() {
   const [activePhotoIndex, setActivePhotoIndex] = useState<number | null>(null);

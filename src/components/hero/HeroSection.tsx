@@ -91,8 +91,8 @@ export default function HeroSection({
           className="relative mx-auto w-48 h-64 sm:w-56 sm:h-72 rounded-t-[120px] rounded-b-2xl overflow-hidden shadow-elevated border-4 border-earth-beige-soft ring-1 ring-earth-gold/40"
         >
           <Image
-            src="/img/images.jpg"
-            alt="Juan & Una"
+            src="/img/hero.jpg"
+            alt={`${groomNickname} & ${brideNickname}`}
             fill
             className="object-cover object-top"
             priority

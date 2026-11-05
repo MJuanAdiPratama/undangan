@@ -17,23 +17,23 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE IF NOT EXISTS public.events (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     slug TEXT UNIQUE NOT NULL DEFAULT 'wedding-event',
-    title TEXT NOT NULL DEFAULT 'Pernikahan Juan & Una',
+    title TEXT NOT NULL DEFAULT 'Pernikahan Arya & Adelia',
     
     -- Mempelai Pria (Groom)
-    groom_name TEXT NOT NULL DEFAULT 'M Juan Adi Pratama',
-    groom_nickname TEXT NOT NULL DEFAULT 'Juan',
-    groom_father TEXT NOT NULL DEFAULT 'Bapak Lorem',
-    groom_mother TEXT NOT NULL DEFAULT 'Ibu Ipsum',
-    groom_instagram TEXT DEFAULT 'qxuan.03',
-    groom_photo_url TEXT DEFAULT '/img/juan.jpeg',
+    groom_name TEXT NOT NULL DEFAULT 'Arya Pratama, S.T.',
+    groom_nickname TEXT NOT NULL DEFAULT 'Arya',
+    groom_father TEXT NOT NULL DEFAULT 'Bapak Hendra Kusuma',
+    groom_mother TEXT NOT NULL DEFAULT 'Ibu Dewi Anggraeni',
+    groom_instagram TEXT DEFAULT 'aryapratama',
+    groom_photo_url TEXT DEFAULT '/img/groom.jpg',
     
     -- Mempelai Wanita (Bride)
-    bride_name TEXT NOT NULL DEFAULT 'Nadya Una',
-    bride_nickname TEXT NOT NULL DEFAULT 'Una',
-    bride_father TEXT NOT NULL DEFAULT 'Bapak Situmorang',
-    bride_mother TEXT NOT NULL DEFAULT 'Ibu Rahayu',
-    bride_instagram TEXT DEFAULT 'nadyauna',
-    bride_photo_url TEXT DEFAULT '/img/una.jpeg',
+    bride_name TEXT NOT NULL DEFAULT 'Adelia Larasati, S.Ds.',
+    bride_nickname TEXT NOT NULL DEFAULT 'Adelia',
+    bride_father TEXT NOT NULL DEFAULT 'Bapak Bambang Sutedjo',
+    bride_mother TEXT NOT NULL DEFAULT 'Ibu Sri Wahyuni',
+    bride_instagram TEXT DEFAULT 'adelialarasati',
+    bride_photo_url TEXT DEFAULT '/img/bride.jpg',
     
     -- Kutipan / Ayat
     quote_text TEXT DEFAULT 'Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.',
@@ -213,14 +213,16 @@ END $$;
 -- ------------------------------------------------------------------------------
 -- 10. DATA AWAL (SEED DATA CONTOH)
 -- ------------------------------------------------------------------------------
-INSERT INTO public.events (slug, title, groom_name, groom_nickname, bride_name, bride_nickname)
+INSERT INTO public.events (slug, title, groom_name, groom_nickname, bride_name, bride_nickname, groom_photo_url, bride_photo_url)
 VALUES (
     'wedding-event', 
-    'Pernikahan Juan & Una',
-    'M Juan Adi Pratama',
-    'Juan',
-    'Nadya Una',
-    'Una'
+    'Pernikahan Arya & Adelia',
+    'Arya Pratama, S.T.',
+    'Arya',
+    'Adelia Larasati, S.Ds.',
+    'Adelia',
+    '/img/groom.jpg',
+    '/img/bride.jpg'
 ) ON CONFLICT (slug) DO NOTHING;
 
 -- Contoh data awal tamu

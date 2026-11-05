@@ -43,13 +43,13 @@ Buka file tersebut untuk mengubah:
 
 ### 2. Mengubah Foto & Lagu
 Semua file media berada di dalam folder:  
-👉 **`public/`**
+👉 **`public/img/`** dan **`public/audio/`**
 
-- **Foto Utama (Cover Atas):** Ganti file `public/img/images.jpg`
-- **Foto Mempelai Pria:** Ganti file `public/img/juan.jpeg`
-- **Foto Mempelai Wanita:** Ganti file `public/img/una.jpeg`
-- **Foto Barcode QRIS / DANA:** Ganti file `public/img/dana.jpeg`
-- **Foto-Foto Galeri:** Simpan di dalam folder `public/img/gallery/`
+- **Foto Utama (Cover Atas):** Ganti file `public/img/hero.jpg`
+- **Foto Mempelai Pria:** Ganti file `public/img/groom.jpg`
+- **Foto Mempelai Wanita:** Ganti file `public/img/bride.jpg`
+- **Foto Barcode QRIS:** Ganti file `public/img/qris.svg`
+- **Foto-Foto Galeri:** Ganti file `public/img/gallery-1.jpg` s/d `gallery-6.jpg`
 - **Lagu Latar (Audio):** Ganti file lagu di `public/audio/wedding-song.mp3`
 
 ---

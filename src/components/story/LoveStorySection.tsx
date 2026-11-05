@@ -3,38 +3,9 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { StoryMilestone } from '@/types';
+import { weddingData } from '@/lib/weddingData';
 
-const defaultStories: StoryMilestone[] = [
-  {
-    date: '20 September 2019',
-    title: 'Pertemuan Pertama',
-    description:
-      'Dipertemukan dalam sebuah kegiatan kampus yang tak terduga. Sapaan singkat yang menjadi awal perjalanan panjang penuh rasa dan asa.',
-    image: '/img/gunung2.jpg',
-  },
-  {
-    date: '20 Juni 2020',
-    title: 'Memulai Komitmen',
-    description:
-      'Setelah banyak diskusi dan saling memahami visi hidup, kami memutuskan untuk saling menjaga hati dan melangkah bersama dengan niat yang tulus.',
-    image: '/img/gallery/una.jpg',
-  },
-  {
-    date: '20 Agustus 2022',
-    title: 'Hari Pertunangan',
-    description:
-      'Di hadapan kedua keluarga besar, kami mengikat janji suci pertunangan untuk menyatukan dua keluarga dalam jalinan silaturahmi yang abadi.',
-    image: '/img/gallery/vonzy.jpg',
-  },
-  {
-    date: '10 Desember 2026',
-    title: 'Menuju Babak Baru',
-    description:
-      'InsyaAllah ikrar suci pernikahan akan mengantarkan kami menuju gerbang ibadah terpanjang, sakinah, mawaddah, dan warahmah.',
-    image: '/img/images.jpg',
-  },
-];
+const defaultStories = weddingData.stories;
 
 export default function LoveStorySection() {
   return (

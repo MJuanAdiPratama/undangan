@@ -21,7 +21,7 @@ interface PageProps {
 
 // Security Requirement #5: SEO & Privacy: noindex, nofollow untuk halaman tamu personal
 export const metadata: Metadata = {
-  title: 'Undangan Pernikahan Personal | Juan & Una',
+  title: 'Undangan Pernikahan Personal | Arya & Adelia',
   description: 'Undangan Pernikahan Digital Personal Khusus Tamu Undangan',
   robots: {
     index: false,

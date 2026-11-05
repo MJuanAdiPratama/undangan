@@ -28,23 +28,23 @@ export const supabase = isSupabaseConfigured
 export const defaultWeddingEvent: WeddingEvent = {
   id: '00000000-0000-0000-0000-000000000001',
   slug: 'wedding-event',
-  title: 'Pernikahan Juan & Una',
+  title: 'Pernikahan Arya & Adelia',
   
   // Mempelai Pria
-  groom_name: 'M Juan Adi Pratama',
-  groom_nickname: 'Juan',
-  groom_father: 'Bpk. Lorem',
-  groom_mother: 'Ibu Ipsum',
-  groom_instagram: 'qxuan.03',
-  groom_photo_url: '/img/juan.jpeg',
+  groom_name: 'Arya Pratama, S.T.',
+  groom_nickname: 'Arya',
+  groom_father: 'Bpk. Hendra Kusuma',
+  groom_mother: 'Ibu Dewi Anggraeni',
+  groom_instagram: 'aryapratama',
+  groom_photo_url: '/img/groom.jpg',
   
   // Mempelai Wanita
-  bride_name: 'Nadya Una',
-  bride_nickname: 'Una',
-  bride_father: 'Bpk. Situmorang',
-  bride_mother: 'Ibu Rahayu',
-  bride_instagram: 'nadyauna',
-  bride_photo_url: '/img/una.jpeg',
+  bride_name: 'Adelia Larasati, S.Ds.',
+  bride_nickname: 'Adelia',
+  bride_father: 'Bpk. Bambang Sutedjo',
+  bride_mother: 'Ibu Sri Wahyuni',
+  bride_instagram: 'adelialarasati',
+  bride_photo_url: '/img/bride.jpg',
   
   // Kutipan
   quote_text:
@@ -77,18 +77,18 @@ export const defaultWeddingEvent: WeddingEvent = {
   bank_accounts: [
     {
       bank: 'BCA',
-      account_number: '1234567890',
-      account_holder: 'M Juan Adi Pratama',
+      account_number: '8690123456',
+      account_holder: 'Arya Pratama',
     },
     {
       bank: 'Mandiri',
-      account_number: '9876543210123',
-      account_holder: 'M Juan Adi Pratama',
+      account_number: '1370012345678',
+      account_holder: 'Arya Pratama',
     },
   ],
-  qris_image_url: '/img/dana.jpeg',
+  qris_image_url: '/img/qris.svg',
   gift_address:
-    'Jl. Soekarno Hatta No.487, Cijagra, Kec. Lengkong, Kota Bandung 40265 (Penerima: Juan & Una / 081293066707)',
+    'Jalan Dago Asri No. 28, Dago, Kec. Coblong, Kota Bandung 40135 (Penerima: Arya & Adelia / 081234567890)',
   
   audio_url: '/audio/wedding-song.mp3',
   audio_title: 'Tulus - Perahu Kertas',
@@ -135,7 +135,7 @@ export const defaultWishes: Wish[] = [
     id: 'w-1',
     name: 'Budi Santoso',
     message:
-      'Barakallahu lakuma wa baraka alaikuma wa jama\'a bainakuma fii khoir. Selamat menempuh hidup baru Juan & Una, bahagia selalu sampai surga-Nya!',
+      'Barakallahu lakuma wa baraka alaikuma wa jama\'a bainakuma fii khoir. Selamat menempuh hidup baru Arya & Adelia, bahagia selalu sampai surga-Nya!',
     is_visible: true,
     created_at: new Date(Date.now() - 3600000 * 5).toISOString(),
   },
@@ -143,7 +143,7 @@ export const defaultWishes: Wish[] = [
     id: 'w-2',
     name: 'Siti Nurhaliza',
     message:
-      'Selamat untuk Juan dan Una, semoga senantiasa diberikan keberkahan, sakinah mawaddah warahmah, serta dikaruniai keturunan yang sholeh dan sholehah.',
+      'Selamat untuk Arya dan Adelia, semoga senantiasa diberikan keberkahan, sakinah mawaddah warahmah, serta dikaruniai keturunan yang sholeh dan sholehah.',
     is_visible: true,
     created_at: new Date(Date.now() - 3600000 * 2).toISOString(),
   },
@@ -151,7 +151,7 @@ export const defaultWishes: Wish[] = [
     id: 'w-3',
     name: 'Rizky Ramadhan',
     message:
-      'Happy Wedding Juan & Una! Semoga langgeng dan saling melengkapi dalam mengarungi bahtera rumah tangga. Aamiin.',
+      'Happy Wedding Arya & Adelia! Semoga langgeng dan saling melengkapi dalam mengarungi bahtera rumah tangga. Aamiin.',
     is_visible: true,
     created_at: new Date(Date.now() - 3600000).toISOString(),
   },
