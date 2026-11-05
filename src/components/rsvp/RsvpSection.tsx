@@ -64,7 +64,26 @@ export default function RsvpSection({
         (payload) => {
           const newWish = payload.new as Wish;
           if (newWish.is_visible) {
-            setWishes((prev) => [newWish, ...prev]);
+            setWishes((prev) => {
+              // 1. Cegah duplikasi jika ID sudah ada
+              if (prev.some((w) => w.id === newWish.id)) {
+                return prev;
+              }
+              // 2. Gantikan wish sementara (temp-*) atau wish dengan isi & nama yang cocok
+              const matchingIdx = prev.findIndex(
+                (w) =>
+                  (w.id.startsWith('temp-') ||
+                    w.name.trim().toLowerCase() === newWish.name.trim().toLowerCase()) &&
+                  w.message.trim() === newWish.message.trim()
+              );
+              if (matchingIdx !== -1) {
+                const updated = [...prev];
+                updated[matchingIdx] = newWish;
+                return updated;
+              }
+              // 3. Tambahkan ucapan baru di urutan teratas
+              return [newWish, ...prev];
+            });
           }
         }
       )
@@ -119,17 +138,34 @@ export default function RsvpSection({
 
       setSubmitted(true);
 
-      // Jika ada pesan, update langsung feed ucapan lokal agar instan
+      // Jika ada pesan, perbarui feed ucapan secara aman tanpa duplikasi
       if (message.trim()) {
-        const optimisticWish: Wish = {
-          id: 'temp-' + Date.now(),
-          name,
-          relationship: status === 'Hadir' ? 'Hadir' : 'Memberi Doa',
-          message,
-          is_visible: true,
-          created_at: new Date().toISOString(),
-        };
-        setWishes((prev) => [optimisticWish, ...prev]);
+        const returnedWish = result.data?.wish as Wish | undefined;
+        setWishes((prev) => {
+          // 1. Cek apakah wish sudah masuk lewat Realtime (berdasarkan ID atau konten)
+          if (returnedWish && prev.some((w) => w.id === returnedWish.id)) {
+            return prev;
+          }
+          const alreadyExists = prev.some(
+            (w) =>
+              w.name.trim().toLowerCase() === name.trim().toLowerCase() &&
+              w.message.trim() === message.trim()
+          );
+          if (alreadyExists) {
+            return prev;
+          }
+
+          // 2. Jika belum ada (misal Realtime tertunda atau fallback offline), masukkan entri baru
+          const newEntry: Wish = returnedWish || {
+            id: 'temp-' + Date.now(),
+            name,
+            relationship: status === 'Hadir' ? 'Hadir' : 'Memberi Doa',
+            message,
+            is_visible: true,
+            created_at: new Date().toISOString(),
+          };
+          return [newEntry, ...prev];
+        });
       }
 
       setMessage('');

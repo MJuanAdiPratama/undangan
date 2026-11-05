@@ -43,6 +43,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 4. Simpan ke Supabase jika configured
+    let createdWish = null;
     if (isSupabaseConfigured && supabase) {
       // Simpan ke tabel rsvps
       const { error: rsvpError } = await supabase.from('rsvps').insert([
@@ -62,18 +63,24 @@ export async function POST(req: NextRequest) {
 
       // Jika ada pesan, simpan juga ke tabel wishes
       if (message) {
-        const { error: wishError } = await supabase.from('wishes').insert([
-          {
-            name,
-            relationship: status === 'Hadir' ? 'Hadir' : 'Memberi Doa',
-            message,
-            is_visible: true,
-            ip_address: ip,
-          },
-        ]);
+        const { data: wishData, error: wishError } = await supabase
+          .from('wishes')
+          .insert([
+            {
+              name,
+              relationship: status === 'Hadir' ? 'Hadir' : 'Memberi Doa',
+              message,
+              is_visible: true,
+              ip_address: ip,
+            },
+          ])
+          .select()
+          .single();
 
         if (wishError) {
           console.error('Supabase Wish insert error:', wishError);
+        } else {
+          createdWish = wishData;
         }
       }
     }
@@ -86,6 +93,7 @@ export async function POST(req: NextRequest) {
         status,
         guest_count: guestCount,
         message,
+        wish: createdWish,
       },
     });
   } catch (error: unknown) {
