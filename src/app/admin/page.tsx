@@ -32,6 +32,7 @@ export default function AdminDashboardPage() {
   // Autentikasi Passkey Sederhana untuk Keamanan Admin
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [pinInput, setPinInput] = useState('');
+  const [showPin, setShowPin] = useState(false);
   const [authError, setAuthError] = useState('');
 
   // Periksa sesi tersimpan saat halaman dimuat (agar tidak mental saat di-reload)
@@ -343,19 +344,30 @@ Salam hangat,
               Portal Admin Pengantin
             </h1>
             <p className="text-xs text-earth-sage-dark">
-              by skywannn wedding • Masukkan PIN Keamanan
+              Masukkan PIN Keamanan
             </p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
-            <input
-              type="password"
-              value={pinInput}
-              onChange={(e) => setPinInput(e.target.value)}
-              placeholder="Masukkan PIN (Default: 123456)"
-              className="w-full text-center tracking-widest text-lg py-3 px-4 rounded-xl border border-earth-gold/40 bg-earth-beige text-earth-charcoal focus:outline-none focus:ring-2 focus:ring-earth-gold/60"
-              autoFocus
-            />
+            <div className="relative">
+              <input
+                type={showPin ? 'text' : 'password'}
+                value={pinInput}
+                onChange={(e) => setPinInput(e.target.value)}
+                placeholder="Masukkan PIN"
+                className="w-full text-center tracking-widest text-lg py-3 pl-12 pr-12 rounded-xl border border-earth-gold/40 bg-earth-beige text-earth-charcoal focus:outline-none focus:ring-2 focus:ring-earth-gold/60"
+                autoFocus
+              />
+              <button
+                type="button"
+                onClick={() => setShowPin(!showPin)}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-earth-sage-dark hover:text-earth-charcoal p-1.5 rounded-lg transition-colors"
+                title={showPin ? 'Sembunyikan PIN' : 'Tampilkan PIN'}
+                aria-label={showPin ? 'Sembunyikan PIN' : 'Tampilkan PIN'}
+              >
+                {showPin ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
             {authError && <p className="text-xs text-red-600 font-medium">{authError}</p>}
             <button
               type="submit"
@@ -364,8 +376,8 @@ Salam hangat,
               Buka Dashboard
             </button>
           </form>
-          <p className="text-[11px] text-earth-charcoal/50">
-            *PIN default: <span className="font-mono font-bold text-earth-charcoal">123456</span>
+          <p className="text-xs uppercase tracking-widest font-serif text-earth-gold-dark font-medium">
+            by skywannn wedding
           </p>
         </div>
       </main>
