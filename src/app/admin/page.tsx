@@ -20,15 +20,32 @@ import {
   Sparkles,
   Lock,
   Send,
+  LogOut,
 } from 'lucide-react';
 import { Guest, Wish } from '@/types';
 import { defaultWeddingEvent } from '@/lib/supabase';
+import { useNotification } from '@/components/ui/NotificationContext';
 
 export default function AdminDashboardPage() {
+  const { showToast, showConfirm } = useNotification();
+
   // Autentikasi Passkey Sederhana untuk Keamanan Admin
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [pinInput, setPinInput] = useState('');
   const [authError, setAuthError] = useState('');
+
+  // Periksa sesi tersimpan saat halaman dimuat (agar tidak mental saat di-reload)
+  useEffect(() => {
+    try {
+      const savedAuth = localStorage.getItem('skywannn_admin_session');
+      if (savedAuth === 'true') {
+        setIsAuthenticated(true);
+        fetchData();
+      }
+    } catch (e) {
+      // Abaikan jika localStorage tidak tersedia
+    }
+  }, []);
 
   // Tab State
   const [activeTab, setActiveTab] = useState<'guests' | 'analytics' | 'wishes'>('guests');
@@ -60,12 +77,39 @@ export default function AdminDashboardPage() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (pinInput === '123456' || pinInput === 'admin') {
+      try {
+        localStorage.setItem('skywannn_admin_session', 'true');
+      } catch (err) {
+        // Abaikan jika localStorage diblokir
+      }
       setIsAuthenticated(true);
       setAuthError('');
       fetchData();
+      showToast('Selamat datang di Dashboard Admin', 'success', 'Login Berhasil');
     } else {
       setAuthError('PIN Keamanan Salah. Gunakan PIN: 123456');
+      showToast('PIN Keamanan Salah. Gunakan PIN: 123456', 'error', 'Akses Ditolak');
     }
+  };
+
+  const handleLogout = () => {
+    showConfirm({
+      title: 'Keluar Dashboard',
+      message: 'Apakah Anda yakin ingin keluar dari sesi admin pengantin?',
+      confirmText: 'Ya, Keluar',
+      cancelText: 'Batal',
+      type: 'warning',
+      onConfirm: () => {
+        try {
+          localStorage.removeItem('skywannn_admin_session');
+        } catch (err) {
+          // Abaikan
+        }
+        setIsAuthenticated(false);
+        setPinInput('');
+        showToast('Anda telah keluar dari dashboard admin.', 'info');
+      },
+    });
   };
 
   const fetchData = async () => {
@@ -110,30 +154,46 @@ export default function AdminDashboardPage() {
       if (result.success && result.data) {
         setGuests((prev) => [result.data, ...prev]);
         setAnalytics((prev) => ({ ...prev, totalGuests: prev.totalGuests + 1 }));
+        showToast(`Tamu "${newName}" berhasil ditambahkan!`, 'success', 'Berhasil');
         setNewName('');
         setNewPhone('');
+      } else {
+        showToast('Gagal menambahkan data tamu.', 'error');
       }
     } catch (err) {
       console.error('Add guest error:', err);
+      showToast('Terjadi kesalahan saat menambahkan tamu.', 'error');
     } finally {
       setIsAddingGuest(false);
     }
   };
 
-  const handleDeleteGuest = async (id: string) => {
-    if (!confirm('Hapus data tamu ini?')) return;
-    try {
-      const res = await fetch(`/api/guests?id=${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        setGuests((prev) => prev.filter((g) => g.id !== id));
-        setAnalytics((prev) => ({
-          ...prev,
-          totalGuests: Math.max(0, prev.totalGuests - 1),
-        }));
-      }
-    } catch (err) {
-      console.error('Delete guest error:', err);
-    }
+  const handleDeleteGuest = (id: string, guestName?: string) => {
+    showConfirm({
+      title: 'Hapus Tamu',
+      message: `Hapus data undangan ${guestName ? `"${guestName}"` : 'tamu ini'} secara permanen? Data yang telah dihapus tidak dapat dipulihkan.`,
+      confirmText: 'Hapus',
+      cancelText: 'Batal',
+      type: 'danger',
+      onConfirm: async () => {
+        try {
+          const res = await fetch(`/api/guests?id=${id}`, { method: 'DELETE' });
+          if (res.ok) {
+            setGuests((prev) => prev.filter((g) => g.id !== id));
+            setAnalytics((prev) => ({
+              ...prev,
+              totalGuests: Math.max(0, prev.totalGuests - 1),
+            }));
+            showToast(`Data tamu ${guestName ? `"${guestName}"` : ''} berhasil dihapus.`, 'success');
+          } else {
+            showToast('Gagal menghapus data tamu dari server.', 'error');
+          }
+        } catch (err) {
+          console.error('Delete guest error:', err);
+          showToast('Terjadi kesalahan saat menghapus tamu.', 'error');
+        }
+      },
+    });
   };
 
   const handleToggleWishVisibility = async (wish: Wish) => {
@@ -150,22 +210,41 @@ export default function AdminDashboardPage() {
             w.id === wish.id ? { ...w, is_visible: updatedVisibility } : w
           )
         );
+        showToast(
+          `Ucapan berhasil ${updatedVisibility ? 'ditampilkan kembali' : 'disembunyikan dari publik'}.`,
+          'info'
+        );
+      } else {
+        showToast('Gagal memperbarui status ucapan.', 'error');
       }
     } catch (err) {
       console.error('Toggle wish error:', err);
+      showToast('Terjadi kesalahan saat memperbarui ucapan.', 'error');
     }
   };
 
-  const handleDeleteWish = async (id: string) => {
-    if (!confirm('Hapus ucapan ini secara permanen?')) return;
-    try {
-      const res = await fetch(`/api/wishes?id=${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        setWishes((prev) => prev.filter((w) => w.id !== id));
-      }
-    } catch (err) {
-      console.error('Delete wish error:', err);
-    }
+  const handleDeleteWish = (id: string, authorName?: string) => {
+    showConfirm({
+      title: 'Hapus Ucapan',
+      message: `Hapus ucapan dan doa dari ${authorName ? `"${authorName}"` : 'tamu ini'} secara permanen?`,
+      confirmText: 'Hapus',
+      cancelText: 'Batal',
+      type: 'danger',
+      onConfirm: async () => {
+        try {
+          const res = await fetch(`/api/wishes?id=${id}`, { method: 'DELETE' });
+          if (res.ok) {
+            setWishes((prev) => prev.filter((w) => w.id !== id));
+            showToast('Ucapan berhasil dihapus secara permanen.', 'success');
+          } else {
+            showToast('Gagal menghapus ucapan dari server.', 'error');
+          }
+        } catch (err) {
+          console.error('Delete wish error:', err);
+          showToast('Terjadi kesalahan saat menghapus ucapan.', 'error');
+        }
+      },
+    });
   };
 
   // URL Unik Per Tamu
@@ -201,6 +280,7 @@ Salam hangat,
     const url = generateGuestUrl(guest);
     navigator.clipboard.writeText(url);
     setCopiedLink(guest.id);
+    showToast(`Link undangan untuk ${guest.name} berhasil disalin!`, 'success');
     setTimeout(() => setCopiedLink(null), 3000);
   };
 
@@ -208,6 +288,7 @@ Salam hangat,
     const text = generateWaText(guest);
     navigator.clipboard.writeText(text);
     setCopiedWaText(guest.id);
+    showToast(`Teks WhatsApp untuk ${guest.name} berhasil disalin!`, 'success');
     setTimeout(() => setCopiedWaText(null), 3000);
   };
 
@@ -242,6 +323,7 @@ Salam hangat,
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    showToast('Daftar tamu berhasil diekspor ke CSV!', 'success');
   };
 
   const filteredGuests = guests.filter((g) =>
@@ -309,10 +391,11 @@ Salam hangat,
             </div>
           </div>
           <button
-            onClick={() => setIsAuthenticated(false)}
-            className="text-xs text-earth-beige/80 hover:text-earth-gold transition-colors py-1 px-3 rounded-lg border border-earth-beige/20"
+            onClick={handleLogout}
+            className="flex items-center gap-1.5 text-xs text-earth-beige/80 hover:text-earth-gold transition-colors py-1.5 px-3 rounded-lg border border-earth-beige/20 hover:border-earth-gold/40"
           >
-            Keluar
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Keluar</span>
           </button>
         </div>
       </header>
@@ -506,7 +589,7 @@ Salam hangat,
                       </button>
 
                       <button
-                        onClick={() => handleDeleteGuest(guest.id)}
+                        onClick={() => handleDeleteGuest(guest.id, guest.name)}
                         className="p-1.5 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
                         title="Hapus Tamu"
                       >
@@ -620,7 +703,7 @@ Salam hangat,
                       </button>
 
                       <button
-                        onClick={() => handleDeleteWish(w.id)}
+                        onClick={() => handleDeleteWish(w.id, w.name)}
                         className="p-1.5 rounded-lg text-red-600 hover:bg-red-100 transition-colors"
                         title="Hapus Permanen"
                       >

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
@@ -13,11 +13,37 @@ export default function GallerySection() {
 
   const openLightbox = (index: number) => {
     setActivePhotoIndex(index);
+    try {
+      window.history.pushState({ modal: 'lightbox' }, '', window.location.href);
+    } catch (e) {
+      // Abaikan jika env test
+    }
   };
 
   const closeLightbox = () => {
     setActivePhotoIndex(null);
+    try {
+      if (window.history.state && window.history.state.modal === 'lightbox') {
+        window.history.back();
+      }
+    } catch (e) {
+      // Abaikan jika env test
+    }
   };
+
+  // Tangani tombol back di HP saat lightbox sedang terbuka
+  useEffect(() => {
+    const handlePopState = () => {
+      if (activePhotoIndex !== null) {
+        setActivePhotoIndex(null);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [activePhotoIndex]);
 
   const handlePrev = (e: React.MouseEvent) => {
     e.stopPropagation();

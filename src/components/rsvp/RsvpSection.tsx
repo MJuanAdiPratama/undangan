@@ -6,6 +6,7 @@ import { Send, CheckCircle2, MessageSquare, Users, Sparkles, UserCheck, Heart } 
 import confetti from 'canvas-confetti';
 import { RsvpStatus, Wish } from '@/types';
 import { supabase, isSupabaseConfigured, defaultWishes } from '@/lib/supabase';
+import { useNotification } from '@/components/ui/NotificationContext';
 
 interface RsvpSectionProps {
   initialGuestName?: string;
@@ -16,6 +17,7 @@ export default function RsvpSection({
   initialGuestName = '',
   guestId,
 }: RsvpSectionProps) {
+  const { showToast } = useNotification();
   const [name, setName] = useState(initialGuestName);
   const [status, setStatus] = useState<RsvpStatus>('Hadir');
   const [guestCount, setGuestCount] = useState<number>(1);
@@ -98,6 +100,7 @@ export default function RsvpSection({
     e.preventDefault();
     if (!name.trim()) {
       setErrorMessage('Silakan isi nama Anda.');
+      showToast('Silakan isi nama Anda sebelum mengirim konfirmasi.', 'warning', 'Perhatian');
       return;
     }
 
@@ -137,6 +140,7 @@ export default function RsvpSection({
       }
 
       setSubmitted(true);
+      showToast('Konfirmasi kehadiran dan doa restu Anda berhasil dikirim!', 'success', 'Terkirim');
 
       // Jika ada pesan, perbarui feed ucapan secara aman tanpa duplikasi
       if (message.trim()) {
@@ -170,11 +174,9 @@ export default function RsvpSection({
 
       setMessage('');
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setErrorMessage(err.message);
-      } else {
-        setErrorMessage('Terjadi kesalahan. Silakan coba lagi.');
-      }
+      const errMsg = err instanceof Error ? err.message : 'Terjadi kesalahan. Silakan coba lagi.';
+      setErrorMessage(errMsg);
+      showToast(errMsg, 'error', 'Gagal Mengirim');
     } finally {
       setIsSubmitting(false);
     }

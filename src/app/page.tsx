@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import CoverOverlay from '@/components/cover/CoverOverlay';
 import AudioPlayer from '@/components/audio/AudioPlayer';
@@ -13,14 +13,19 @@ import RsvpSection from '@/components/rsvp/RsvpSection';
 import GiftSection from '@/components/gift/GiftSection';
 import FooterWatermark from '@/components/footer/FooterWatermark';
 import { defaultWeddingEvent } from '@/lib/supabase';
+import { useMobileBackExitGuard } from '@/hooks/useMobileBackExitGuard';
 
 function InvitationContent() {
+  const [isOpened, setIsOpened] = useState(false);
   const searchParams = useSearchParams();
   // Ambil parameter nama tamu dari query URL ?to= atau ?u=
   const guestQuery = searchParams.get('to') || searchParams.get('u') || '';
   const guestName = guestQuery ? guestQuery.trim() : 'Tamu Undangan';
 
   const event = defaultWeddingEvent;
+
+  // Proteksi tombol back di browser HP agar tidak langsung keluar website
+  useMobileBackExitGuard({ isInvitationOpened: isOpened });
 
   return (
     <main className="relative min-h-screen bg-earth-beige">
@@ -30,6 +35,7 @@ function InvitationContent() {
         groomNickname={event.groom_nickname}
         brideNickname={event.bride_nickname}
         weddingDate="Minggu, 10 Desember 2026"
+        onOpen={() => setIsOpened(true)}
       />
 
       {/* 2. Floating Audio Controller */}

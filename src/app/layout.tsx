@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Cormorant_Garamond, Plus_Jakarta_Sans, Alex_Brush } from 'next/font/google';
 import './globals.css';
 import { AudioProvider } from '@/components/audio/AudioContext';
+import { NotificationProvider } from '@/components/ui/NotificationContext';
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
@@ -56,7 +57,9 @@ export default function RootLayout({
     <html lang="id" className={`${cormorant.variable} ${jakarta.variable} ${alex.variable}`}>
       <body className="antialiased min-h-screen bg-earth-beige text-earth-charcoal selection:bg-earth-gold/20 selection:text-earth-charcoal">
         <AudioProvider audioSrc="/audio/wedding-song.mp3">
-          {children}
+          <NotificationProvider>
+            {children}
+          </NotificationProvider>
         </AudioProvider>
       </body>
     </html>

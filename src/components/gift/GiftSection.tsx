@@ -5,24 +5,28 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { CreditCard, Copy, Check, Gift, QrCode, MapPin } from 'lucide-react';
 import { WeddingEvent } from '@/types';
+import { useNotification } from '@/components/ui/NotificationContext';
 
 interface GiftSectionProps {
   event: WeddingEvent;
 }
 
 export default function GiftSection({ event }: GiftSectionProps) {
+  const { showToast } = useNotification();
   const [copiedAccount, setCopiedAccount] = useState<string | null>(null);
   const [copiedAddress, setCopiedAddress] = useState(false);
 
-  const handleCopyAccount = (accountNumber: string) => {
+  const handleCopyAccount = (bankName: string, accountNumber: string) => {
     navigator.clipboard.writeText(accountNumber);
     setCopiedAccount(accountNumber);
+    showToast(`Nomor rekening ${bankName} (${accountNumber}) berhasil disalin!`, 'success', 'Tersalin');
     setTimeout(() => setCopiedAccount(null), 3000);
   };
 
   const handleCopyAddress = (address: string) => {
     navigator.clipboard.writeText(address);
     setCopiedAddress(true);
+    showToast('Alamat penerima kado berhasil disalin ke clipboard!', 'success', 'Tersalin');
     setTimeout(() => setCopiedAddress(false), 3000);
   };
 
@@ -77,7 +81,7 @@ export default function GiftSection({ event }: GiftSectionProps) {
                 </div>
 
                 <button
-                  onClick={() => handleCopyAccount(acc.account_number)}
+                  onClick={() => handleCopyAccount(acc.bank, acc.account_number)}
                   className="inline-flex items-center justify-center gap-2 py-2 px-4 rounded-xl bg-earth-charcoal text-earth-beige hover:bg-earth-sage text-xs font-medium transition-colors"
                 >
                   {copiedAccount === acc.account_number ? (
