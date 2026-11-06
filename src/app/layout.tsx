@@ -31,11 +31,14 @@ export const metadata: Metadata = {
     'Undangan Pernikahan Digital Handcrafted Fine-Art Arya & Adelia. Diselenggarakan pada Minggu, 10 Desember 2026 di Bandung, Jawa Barat.',
   icons: {
     icon: [
-      { url: '/icon.svg', type: 'image/svg+xml' },
-      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.png?v=3', sizes: '32x32', type: 'image/png' },
+      { url: '/icon.svg?v=3', type: 'image/svg+xml' },
+      { url: '/favicon.ico?v=3', sizes: 'any' },
     ],
-    shortcut: '/icon.svg',
-    apple: '/icon.svg',
+    shortcut: '/icon.png?v=3',
+    apple: [
+      { url: '/apple-icon.png?v=3', sizes: '180x180', type: 'image/png' },
+    ],
   },
   openGraph: {
     title: 'The Wedding of Arya & Adelia',
